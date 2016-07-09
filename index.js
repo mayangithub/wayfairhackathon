@@ -380,8 +380,8 @@ function receivedMessage(event) {
         break;
 
       default:
-        keyword(senderID, messageText);
-        // sendSimplifyTextMessage(senderID, messageText);
+        // keyword(senderID, messageText);
+        sendSimplifyTextMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -389,7 +389,7 @@ function receivedMessage(event) {
 }
 
 function sendBedsMessage(recipientId) {
-  var contents = fs.readFileSync('testFile', 'utf8');
+  var contents = fs.readFileSync('testFile3', 'utf8');
 
   var messageData = JSON.parse(contents);
   messageData.recipient.id = recipientId;
@@ -416,43 +416,43 @@ function buildOptions(keyword) {
 }
 
 function keyword(senderID, messageText) {
-  var options = buildOptions(messageText);
+  // var options = buildOptions(messageText);
 
-  console.log("rest::getJSON");
-  // var self = this;
+  // console.log("rest::getJSON");
+  // // var self = this;
 
-  var prot = http;
-  var req = prot.request(options, function(res) {
-    var output = '';
-    console.log(options.host + ':' + res.statusCode);
+  // var prot = http;
+  // var req = prot.request(options, function(res) {
+  //   var output = '';
+  //   console.log(options.host + ':' + res.statusCode);
 
-    res.on('data', function (chunk) {
-      output += chunk;
-      console.log('Chunking method');
-    });
+  //   res.on('data', function (chunk) {
+  //     output += chunk;
+  //     console.log('Chunking method');
+  //   });
 
-    // First test out key words that should work
-    res.on('end', function() {
-      console.log(output);
-      // var obj = JSON.parse(output);
-      console.log('ending the request');
-      // self.sendSimplifyTextMessage(senderID, obj.schema_id);
+  //   // First test out key words that should work
+  //   res.on('end', function() {
+  //     console.log(output);
+  //     // var obj = JSON.parse(output);
+  //     console.log('ending the request');
+  //     // self.sendSimplifyTextMessage(senderID, obj.schema_id);
 
-      // var messageData = buildDataFromResponse(senderID, obj);
-      // callSendAPI(messageData);
-    });
-  });
+  //     // var messageData = buildDataFromResponse(senderID, obj);
+  //     // callSendAPI(messageData);
+  //   });
+  // });
 
-  req.setTimeout(5000);
+  // req.setTimeout(5000);
 
-  req.setHeader('Content-Type', 'application/json; charset=utf-8');
+  // req.setHeader('Content-Type', 'application/json; charset=utf-8');
 
-  console.log("request message:" + req.message + "request:");
+  // console.log("request message:" + req.message + "request:");
 
-  req.on('error', function(err) {
-    console.log('error: ' + err);
-  });
-  sendSimplifyTextMessage(senderID, messageText);
+  // req.on('error', function(err) {
+  //   console.log('error: ' + err);
+  // });
+  // sendSimplifyTextMessage(senderID, messageText);
 }
 
 
@@ -775,9 +775,6 @@ function sendTextMessage(recipientId, messageText) {
  * Extract keywords from text send from user, using the Send API
  */
 function sendSimplifyTextMessage(recipientId, messageText) {
-  // extract keyword
-  // var extractedKeywords = keywordExtractor.extract(messageText, {language:"english", remove_digits: true, return_changed_case: true, remove_duplicates: true});
-  // var extractedText = extractedKeywords.toString();
 
   var messageData = {
     recipient: {
