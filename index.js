@@ -301,6 +301,8 @@ function sendHelpMessage(recipientId) {
   };
 
   callSendAPI(messageData);
+  messageData.message.text = 'This is a second message';
+  callSendAPI(messageData);
 }
 
 /*
