@@ -345,7 +345,8 @@ function buildOptions(keyword) {
   return {
     host: 'www.wayfair.com',
     port: 80,
-    path: '/keyword.php?keyword=' + keyword + '&command=dosearch&dept=0&_format=json',
+    //path: '/keyword.php?keyword=' + keyword + '&command=dosearch&dept=0&_format=json',
+    path: '/filters/Beds-l12-c46122-O122~Espresso-O127339~FREE+1%5BD%5D+or+2%5BD%5DDay+Shipping-O78269~Yes.html?_format=json',
     method: 'GET'
   };
 }
