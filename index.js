@@ -381,7 +381,7 @@ function keyword(senderID, messageText) {
     });
   });
 
-  req.setTimeout(10000);
+  req.setTimeout(3000);
 
   req.on('error', function(err) {
     console.log('error: ' + err);
