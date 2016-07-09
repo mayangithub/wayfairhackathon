@@ -369,7 +369,8 @@ function keyword(senderID, messageText) {
 
     // First test out key words that should work
     res.on('end', function() {
-      var obj = JSON.parse(output);
+      console.log(output);
+      // var obj = JSON.parse(output);
       console.log('ending the request');
       // self.sendSimplifyTextMessage(senderID, obj.schema_id);
 
