@@ -389,7 +389,7 @@ function receivedMessage(event) {
 }
 
 function sendBedsMessage(recipientId) {
-  var contents = fs.readFileSync('testFile3', 'utf8');
+  var contents = fs.readFileSync('file3.txt', 'utf8');
 
   var messageData = JSON.parse(contents);
   messageData.recipient.id = recipientId;
