@@ -402,15 +402,18 @@ function sendImageMessage(recipientId) {
     },
     message: {
       attachment: {
-        type: "image",
-        payload: {
+        type: "template",
+        payload:{
+          template_type: "generic",
           elements: [
             {
+              type: "image",
               title: "This is an oculus"
               image_url: "http://messengerdemo.parseapp.com/img/rift.png",
               subtitle: "rift!"
             },
             {
+              type: "image",
               image_url: "https://secure.img2.wfrcdn.com/lf/49/hash/24871/10220673/1/Glamour%2B13.5%2522%2BOval%2BPlatter.jpg",
               title: "The greatest platter in history!"
             }
