@@ -367,13 +367,10 @@ function keyword(senderID, messageText) {
     // First test out key words that should work
     res.on('end', function() {
       var obj = JSON.parse(output);
-      // for (var i = 0; i < 5; i++) {
-      //   console.log(products[i].name);
-      // }
+      sendSimplifyTextMessage(senderID, obj.schema_id);
 
-      var messageData = buildDataFromResponse(senderID, obj);
-      callSendAPI(messageData);
-      logs();
+      // var messageData = buildDataFromResponse(senderID, obj);
+      // callSendAPI(messageData);
     });
   });
 
