@@ -757,8 +757,9 @@ function callSendAPI(messageData) {
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
-app.get('/', function(request, response) {
-  response.render('pages/index');
+app.get('/', function(req, res) {
+  res.send(JSON.stringify(req.params));
+  //response.render('pages/index');
 });
 
 
