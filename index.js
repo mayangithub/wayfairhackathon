@@ -343,10 +343,12 @@ function buildOptions(keyword) {
   // Replace spaces with + and deal with the other url encoding issues later
   keyword = keyword.replace(/ /g, '+');
   return {
-    host: 'www.wayfair.com',
+    host: 'jsonplaceholder.typicode.com',
+    //host: 'www.wayfair.com',
     port: 80,
     //path: '/keyword.php?keyword=' + keyword + '&command=dosearch&dept=0&_format=json',
-    path: '/filters/Beds-l12-c46122-O122~Espresso-O127339~FREE+1%5BD%5D+or+2%5BD%5DDay+Shipping-O78269~Yes.html?_format=json',
+    //path: '/filters/Beds-l12-c46122-O122~Espresso-O127339~FREE+1%5BD%5D+or+2%5BD%5DDay+Shipping-O78269~Yes.html?_format=json',
+    path: '/photos',
     method: 'GET'
   };
 }
@@ -378,6 +380,8 @@ function keyword(senderID, messageText) {
       // callSendAPI(messageData);
     });
   });
+
+  req.setTimeout(10000);
 
   req.on('error', function(err) {
     console.log('error: ' + err);
