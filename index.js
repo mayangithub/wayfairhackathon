@@ -758,8 +758,8 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.get('/', function(req, res) {
-  res.send(JSON.stringify(req.params));
-  //response.render('pages/index');
+  // res.send(JSON.stringify(req.params.challenge));
+  response.render('pages/index');
 });
 
 
