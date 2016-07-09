@@ -385,7 +385,7 @@ function keyword(senderID, messageText) {
 
   req.setHeader('Content-Type', 'application/json; charset=utf-8');
 
-  console.log("request:" + req.content);
+  console.log("request message:" + req.message + "request:");
 
   req.on('error', function(err) {
     console.log('error: ' + err);
