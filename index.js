@@ -225,6 +225,9 @@ function receivedMessage(event) {
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
     switch (messageText) {
+      case 'help':
+        sendHelpMessage(senderID);
+        break;
       case 'furniture':
         sendFurnitureMessage(senderID);
         break;
@@ -282,6 +285,22 @@ function receivedMessage(event) {
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
   }
+}
+
+function sendHelpMessage(recipientId) {
+  messageText = 'Hello! I am here to help you find anything and everything you need for your home :D\n\nIf you\'re looking for. Just ask for something you\'re looking for!\n\nIf you need furniture just ask and I\ll help you find some! You can get specfic as well. Ask for chairs, beds, tables, etc. and I will help you :D';
+
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: messageText,
+      metadata: "THIS_IS_A_HELP_MESSAGE"
+    }
+  };
+
+  callSendAPI(messageData);
 }
 
 /*
