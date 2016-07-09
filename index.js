@@ -219,6 +219,7 @@ function receivedMessage(event) {
     return;
   }
 
+  // Put regex right here to parse out keywords
   if (messageText) {
 
     // If we receive a text message, check to see if it matches any special
@@ -228,9 +229,11 @@ function receivedMessage(event) {
       case 'help':
         sendHelpMessage(senderID);
         break;
+
       case 'furniture':
         sendFurnitureMessage(senderID);
         break;
+
       case 'image':
         sendImageMessage(senderID);
         break;
@@ -385,12 +388,18 @@ function sendImageMessage(recipientId) {
       id: recipientId
     },
     message: {
-      attachment: {
+      attachment: [{
         type: "image",
         payload: {
           url: "http://messengerdemo.parseapp.com/img/rift.png"
         }
-      }
+      },
+      {
+        type: "image",
+        payload: {
+          url: "https://secure.img2.wfrcdn.com/lf/49/hash/24871/10220673/1/Glamour%2B13.5%2522%2BOval%2BPlatter.jpg"
+        }
+      }]
     }
   };
 
