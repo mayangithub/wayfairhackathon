@@ -1,5 +1,5 @@
 {
-    "appSecret": "secret",
-    "pageAccessToken": "access",
-    "validationToken": "validation"
+    "appSecret": "coocoo_banana_secret",
+    "pageAccessToken": "coocoo_banana_access",
+    "validationToken": "coocoo_banana_validation"
 }
