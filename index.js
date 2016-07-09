@@ -20,6 +20,7 @@ const
   //keywordExtractor = require("keyword-extractor");
 
 var app = express();
+var fs = require('fs');
 var http = require("http");
 
 app.set('port', process.env.PORT || 5000);
@@ -55,12 +56,12 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
   process.exit(1);
 }
 
-// var options = {
-//   host: 'www.wayfair.com',
-//   port: 80,
-//   path: '/keyword.php?keyword=Beds&command=dosearch&dept=0&_format=json',
-//   method: 'GET'
-// };
+var options = {
+  host: 'www.wayfair.com',
+  port: 80,
+  path: '/keyword.php?keyword=Beds&command=dosearch&dept=0&_format=json',
+  method: 'GET'
+};
 
 // Example endpoint that hits the wayfair endpoint and pulls the appropriate data it needs to build out our response
 app.get('/testing', function(request, response) {
@@ -78,12 +79,57 @@ app.get('/testing', function(request, response) {
 
     res.on('end', function() {
       var obj = JSON.parse(output);
-      var products = obj.product_collection;
-      for (var i = 0; i < 5; i++) {
-        console.log(products[i].name);
+
+
+
+
+
+
+
+      console.log('Building response cards');
+      // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
+      var productsArray = obj.product_collection;
+      var myElements = [];
+
+      for (var i = 0; i < 4; i++) {
+        var card = {};
+        card.title = productsArray[i].name;
+        card.image_url = productsArray[i].image_url;
+        card.subtitle = '$' + productsArray[i].list_price;
+
+        var buyButton = {};
+        buyButton.type = 'web_url';
+        buyButton.title = 'Purchase';
+        buyButton.url = productsArray[i].product_url;
+        card.button = buyButton;
+
+        myElements.push(card);
       }
-      logs();
-      res.send('done');
+
+      var messageData = {
+        recipient: {
+        },
+        message:{
+            attachment:{
+              type:"template",
+              payload:{
+                template_type:"generic",
+                elements: myElements
+              }
+            }
+          }
+      };
+
+      fs.writeFile("testFile2", JSON.stringify(messageData), function(err) {
+        if(err) {
+            return console.log(err);
+        }
+
+        console.log("The file was saved!");
+      });
+
+      var contents = fs.readFileSync('testFile', 'utf8');
+      console.log(JSON.parse(contents));
     });
   });
 
@@ -343,11 +389,11 @@ function receivedMessage(event) {
 }
 
 function sendBedsMessage(recipientId) {
-  var messageData = BEDS_OPTIONS;
+  var contents = fs.readFileSync('testFile', 'utf8');
+
+  var messageData = JSON.parse(contents);
   messageData.recipient.id = recipientId;
 
-  var elementsString = messageData.elements;
-  messageData.elements = JSON.parse(elementsString);
   console.log(messageData.elements);
   callSendAPI(messageData);
 }
@@ -409,6 +455,12 @@ function keyword(senderID, messageText) {
   sendSimplifyTextMessage(senderID, messageText);
 }
 
+
+
+/**
+ *
+ *
+ */
 function buildDataFromResponse(recipientId, object) {
   console.log('Building response cards');
   // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
@@ -440,42 +492,6 @@ function buildDataFromResponse(recipientId, object) {
           payload:{
             template_type:"generic",
             elements: myElements
-            // [
-            //   {
-            //     title:"Welcome to Peter\'s Hats",
-            //     image_url:"http://petersapparel.parseapp.com/img/item100-thumb.png",
-            //     subtitle:"We\'ve got the right hat for everyone.",
-            //     buttons:[
-            //       {
-            //         type:"web_url",
-            //         url:"https://petersapparel.parseapp.com/view_item?item_id=100",
-            //         title:"View Website"
-            //       },
-            //       {
-            //         type:"postback",
-            //         title:"Start Chatting",
-            //         payload:"USER_DEFINED_PAYLOAD"
-            //       }              
-            //     ]
-            //   },
-            //   {
-            //     title:"Welcome to asdfasdf",
-            //     image_url:"http://petersapparel.parseapp.com/img/item100-thumb.png",
-            //     subtitle:"We\'ve got the right hat for everyone.",
-            //     buttons:[
-            //       {
-            //         type:"web_url",
-            //         url:"https://petersapparel.parseapp.com/view_item?item_id=100",
-            //         title:"View Website"
-            //       },
-            //       {
-            //         type:"postback",
-            //         title:"Start Chatting",
-            //         payload:"USER_DEFINED_PAYLOAD"
-            //       }              
-            //     ]
-            //   }
-            // ]
           }
         }
       }
