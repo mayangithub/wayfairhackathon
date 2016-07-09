@@ -48,6 +48,8 @@ const PAGE_ACCESS_TOKEN = (process.env.MESSENGER_PAGE_ACCESS_TOKEN) ?
   (process.env.MESSENGER_PAGE_ACCESS_TOKEN) :
   config.get('pageAccessToken');
 
+const BEDS_OPTIONS = config.get('bedsOptions');
+
 if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
   console.error("Missing config values");
   process.exit(1);
@@ -271,6 +273,10 @@ function receivedMessage(event) {
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
     switch (messageText) {
+      case 'beds':
+        sendBedsMessage(senderID);
+        break;
+
       case 'help':
         sendHelpMessage(senderID);
         break;
@@ -334,6 +340,13 @@ function receivedMessage(event) {
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
   }
+}
+
+function sendBedsMessage(recipientId) {
+  var messageData = BEDS_OPTIONS;
+  messageData.recipient.id = recipientId;
+
+  callSendAPI(messageData);
 }
 
 /**
