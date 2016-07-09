@@ -101,7 +101,7 @@ app.get('/testing', function(request, response) {
         buyButton.type = 'web_url';
         buyButton.title = 'Purchase';
         buyButton.url = productsArray[i].product_url;
-        card.button = buyButton;
+        card.buttons = [buyButton];
 
         myElements.push(card);
       }
@@ -120,7 +120,7 @@ app.get('/testing', function(request, response) {
           }
       };
 
-      fs.writeFile("testFile2", JSON.stringify(messageData), function(err) {
+      fs.writeFile("testFile.txt", JSON.stringify(messageData), function(err) {
         if(err) {
             return console.log(err);
         }
@@ -389,7 +389,7 @@ function receivedMessage(event) {
 }
 
 function sendBedsMessage(recipientId) {
-  var contents = fs.readFileSync('file3.txt', 'utf8');
+  var contents = fs.readFileSync('testFile.txt', 'utf8');
 
   var messageData = JSON.parse(contents);
   messageData.recipient.id = recipientId;
