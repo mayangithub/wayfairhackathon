@@ -346,6 +346,9 @@ function sendBedsMessage(recipientId) {
   var messageData = BEDS_OPTIONS;
   messageData.recipient.id = recipientId;
 
+  var elementsString = messageData.elements;
+  messageData.elements = JSON.parse(elementsString);
+  console.log(messageData.elements);
   callSendAPI(messageData);
 }
 
