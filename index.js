@@ -126,7 +126,7 @@ function verifyRequestSignature(req, res, buf) {
   if (!signature) {
     // For testing, let's log an error. In production, you should throw an 
     // error.
-    console.error("Couldn't validate the signature.");
+    console.error("Couldn't validate the signature. It doesn't exist.");
   } else {
     var elements = signature.split('=');
     var method = elements[0];
@@ -137,7 +137,7 @@ function verifyRequestSignature(req, res, buf) {
                         .digest('hex');
 
     if (signatureHash != expectedHash) {
-      throw new Error("Couldn't validate the request signature.");
+      throw new Error("Couldn't validate the request signature." + signatureHash);
     }
   }
 }
