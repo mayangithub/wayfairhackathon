@@ -16,8 +16,8 @@ const
   crypto = require('crypto'),
   express = require('express'),
   https = require('https'),  
-  request = require('request'),
-  keywordExtractor = require("keyword-extractor");
+  request = require('request');
+  //keywordExtractor = require("keyword-extractor");
 
 var app = express();
 
@@ -562,15 +562,15 @@ function sendTextMessage(recipientId, messageText) {
  */
 function sendSimplifyTextMessage(recipientId, messageText) {
   // extract keyword
-  var extractedKeywords = keywordExtractor.extract(messageText, {language:"english", remove_digits: true, return_changed_case: true, remove_duplicates: true});
-  var extractedText = extractedKeywords.toString();
+  //var extractedKeywords = keywordExtractor.extract(messageText, {language:"english", remove_digits: true, return_changed_case: true, remove_duplicates: true});
+  //var extractedText = extractedKeywords.toString();
 
   var messageData = {
     recipient: {
       id: recipientId
     },
     message: {
-      text: extractedText,
+      text: messageText,
       metadata: "DEVELOPER_DEFINED_METADATA"
     }
   };
