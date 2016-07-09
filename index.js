@@ -363,6 +363,7 @@ function keyword(senderID, messageText) {
 
     res.on('data', function (chunk) {
       output += chunk;
+      console.log('Chunking method');
     });
 
     // First test out key words that should work
