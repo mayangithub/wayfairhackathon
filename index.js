@@ -225,6 +225,9 @@ function receivedMessage(event) {
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
     switch (messageText) {
+      case 'furniture':
+        sendFurnitureMessage(senderID);
+        break;
       case 'image':
         sendImageMessage(senderID);
         break;
@@ -472,6 +475,20 @@ function sendTextMessage(recipientId, messageText) {
     },
     message: {
       text: messageText,
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+function sendFurnitureMessage(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: "I see you want some furniture! I would suggest going to Wayfair.com :)",
       metadata: "DEVELOPER_DEFINED_METADATA"
     }
   };
