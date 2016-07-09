@@ -3,17 +3,54 @@
     "pageAccessToken": "EAAOZB8X9w1XQBADZB03mXLbOZBb5RGYlxy5LT6o8jJ5xaJALZAPjf9acLD5npRaCA1ZAvv0PWu12kFs6A2yByCNeRZAwKQesaz8og3NyYzapuG1vsVBQ6Bb2SStOXh9tWZCEL4cDnDnuYoyzqO81R3LHJDHjZBq8xUZCkrMTWxJJRhgZDZD",
     "validationToken": "coocoo_banana_validation",
     "bedsOptions": {
-        "recipient": 
-        {
+        "recipient": {
 	        
 	    },
 	    "message": {
-	        "attachment": {
-	        "type": "image",
-	        "payload": {
-	            "url": "http://messengerdemo.parseapp.com/img/rift.png"
+          "attachment": {
+            "type":"template",
+            "payload": {
+              "template_type":"generic",
+              "elements": {[
+              	  {
+              	    "title":"Welcome to Peter's Hats",
+              	    "image_url":"http://petersapparel.parseapp.com/img/item100-thumb.png",
+              	    "subtitle":"We've got the right hat for everyone.",
+              	    "buttons":[
+              	      {
+              	        "type":"web_url",
+              	        "url":"https://petersapparel.parseapp.com/view_item?item_id=100",
+              	        "title":"View Website"
+              	      },
+              	      {
+              	        "type":"postback",
+              	        "title":"Start Chatting",
+              	        "payload":"USER_DEFINED_PAYLOAD"
+              	      }              
+              	    ]
+              	  },
+              	  {
+              	    "title":"Welcome to asdfasdf",
+              	    "image_url":"http://petersapparel.parseapp.com/img/item100-thumb.png",
+              	    "subtitle":"We've got the right hat for everyone.",
+              	    "buttons":[
+              	      {
+              	        "type":"web_url",
+              	        "url":"https://petersapparel.parseapp.com/view_item?item_id=100",
+              	        "title":"View Website"
+              	      },
+              	      {
+              	        "type":"postback",
+              	        "title":"Start Chatting",
+              	        "payload":"USER_DEFINED_PAYLOAD"
+              	      }              
+              	    ]
+              	  }
+              	]
+              }
 	        }
 	      }
 	    }
+    }  
   }
 }
