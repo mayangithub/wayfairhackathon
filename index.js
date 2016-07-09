@@ -354,6 +354,7 @@ function keyword(senderID, messageText) {
   var options = buildOptions(messageText);
 
   console.log("rest::getJSON");
+  // var self = this;
 
   var prot = http;
   var req = prot.request(options, function(res) {
@@ -367,7 +368,8 @@ function keyword(senderID, messageText) {
     // First test out key words that should work
     res.on('end', function() {
       var obj = JSON.parse(output);
-      sendSimplifyTextMessage(senderID, obj.schema_id);
+      console.log('ending the request');
+      // self.sendSimplifyTextMessage(senderID, obj.schema_id);
 
       // var messageData = buildDataFromResponse(senderID, obj);
       // callSendAPI(messageData);
@@ -377,6 +379,7 @@ function keyword(senderID, messageText) {
   req.on('error', function(err) {
     console.log('error: ' + err);
   });
+  sendSimplifyTextMessage(senderID, messageText);
 }
 
 function buildDataFromResponse(recipientId, object) {
