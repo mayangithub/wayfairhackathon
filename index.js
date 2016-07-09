@@ -17,6 +17,7 @@ const
   express = require('express'),
   https = require('https'),  
   request = require('request');
+  //keywordExtractor = require("keyword-extractor");
 
 var app = express();
 var http = require("http");
@@ -339,7 +340,7 @@ function receivedMessage(event) {
         break;
 
       default:
-        sendTextMessage(senderID, messageText);
+        sendSimplifyTextMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -599,6 +600,27 @@ function sendFileMessage(recipientId) {
  *
  */
 function sendTextMessage(recipientId, messageText) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: messageText,
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+/**
+ * Extract keywords from text send from user, using the Send API
+ */
+function sendSimplifyTextMessage(recipientId, messageText) {
+  // extract keyword
+  //var extractedKeywords = keywordExtractor.extract(messageText, {language:"english", remove_digits: true, return_changed_case: true, remove_duplicates: true});
+  //var extractedText = extractedKeywords.toString();
+
   var messageData = {
     recipient: {
       id: recipientId
