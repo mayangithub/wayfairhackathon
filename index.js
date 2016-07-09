@@ -381,7 +381,9 @@ function keyword(senderID, messageText) {
     });
   });
 
-  req.setTimeout(3000);
+  req.setTimeout(5000);
+
+  req.setHeader('Content-Type', 'application/json');
 
   req.on('error', function(err) {
     console.log('error: ' + err);
