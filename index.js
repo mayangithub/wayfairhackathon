@@ -53,27 +53,14 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
   process.exit(1);
 }
 
-var options = {
-  host: 'www.wayfair.com',
-  port: 80,
-  path: '/keyword.php?keyword=Beds&command=dosearch&dept=0&_format=json',
-  method: 'GET'
-};
+// var options = {
+//   host: 'www.wayfair.com',
+//   port: 80,
+//   path: '/keyword.php?keyword=Beds&command=dosearch&dept=0&_format=json',
+//   method: 'GET'
+// };
 
-/**
- * Build out the options object for the request by sending in a keyword
- *
- */
-function buildOptions(keyword) {
-  return {
-    host: 'www.wayfair.com',
-    port: 80,
-    path: '/keyword.php?keyword=' + keyword + '&command=dosearch&dept=0&_format=json',
-    method: 'GET'
-  };
-}
-
-
+// Example endpoint that hits the wayfair endpoint and pulls the appropriate data it needs to build out our response
 app.get('/testing', function(request, response) {
 
   console.log("rest::getJSON");
@@ -93,7 +80,7 @@ app.get('/testing', function(request, response) {
       for (var i = 0; i < 5; i++) {
         console.log(products[i].name);
       }
-      logs()
+      logs();
       res.send('done');
     });
   });
@@ -105,6 +92,10 @@ app.get('/testing', function(request, response) {
   req.end();
   response.send('completed');
 });
+
+function logs(){
+  console.log('calling');
+}
 
 /*
  * Use your own validation token. Check that the token used in the Webhook 
@@ -122,9 +113,6 @@ app.get('/webhook', function(req, res) {
   }  
 });
 
-function logs(){
-  console.log('calling');
-}
 /*
  * All callbacks for Messenger are POST-ed. They will be sent to the same
  * webhook. Be sure to subscribe your app to your page to receive callbacks
@@ -340,12 +328,139 @@ function receivedMessage(event) {
         break;
 
       default:
-        sendSimplifyTextMessage(senderID, messageText);
+        keyword(senderID, messageText);
+        // sendSimplifyTextMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
   }
 }
+
+/**
+ * Build out the options object for the request by sending in a keyword
+ */
+function buildOptions(keyword) {
+  // Replace spaces with + and deal with the other url encoding issues later
+  keyword = keyword.replace(/ /g, '+');
+  return {
+    host: 'www.wayfair.com',
+    port: 80,
+    path: '/keyword.php?keyword=' + keyword + '&command=dosearch&dept=0&_format=json',
+    method: 'GET'
+  };
+}
+
+function keyword(senderID, messageText) {
+  var options = buildOptions(messageText);
+
+  console.log("rest::getJSON");
+
+  var prot = http;
+  var req = prot.request(options, function(res) {
+    var output = '';
+    console.log(options.host + ':' + res.statusCode);
+
+    res.on('data', function (chunk) {
+      output += chunk;
+    });
+
+    // First test out key words that should work
+    res.on('end', function() {
+      var obj = JSON.parse(output);
+      // for (var i = 0; i < 5; i++) {
+      //   console.log(products[i].name);
+      // }
+
+      var messageData = buildDataFromResponse(senderID, obj);
+      callSendAPI(messageData);
+      logs();
+    });
+  });
+
+  req.on('error', function(err) {
+    console.log('error: ' + err);
+  });
+}
+
+function buildDataFromResponse(recipientId, object) {
+  console.log('Building response cards');
+  // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
+  var productsArray = obj.product_collection;
+  var myElements = [];
+
+  for (var i = 0; i < 4; i++) {
+    var card = {};
+    card.title = productsArray[i].name;
+    card.image_url = productsArray[i].image_url;
+    card.subtitle = '$' + productsArray[i].list_price;
+
+    var buyButton = {};
+    buyButton.type = 'web_url';
+    buyButton.title = 'Purchase';
+    buyButton.url = productsArray[i].product_url;
+    card.button = buyButton;
+
+    myElements.push(card);
+  }
+
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message:{
+        attachment:{
+          type:"template",
+          payload:{
+            template_type:"generic",
+            elements: myElements
+            // [
+            //   {
+            //     title:"Welcome to Peter\'s Hats",
+            //     image_url:"http://petersapparel.parseapp.com/img/item100-thumb.png",
+            //     subtitle:"We\'ve got the right hat for everyone.",
+            //     buttons:[
+            //       {
+            //         type:"web_url",
+            //         url:"https://petersapparel.parseapp.com/view_item?item_id=100",
+            //         title:"View Website"
+            //       },
+            //       {
+            //         type:"postback",
+            //         title:"Start Chatting",
+            //         payload:"USER_DEFINED_PAYLOAD"
+            //       }              
+            //     ]
+            //   },
+            //   {
+            //     title:"Welcome to asdfasdf",
+            //     image_url:"http://petersapparel.parseapp.com/img/item100-thumb.png",
+            //     subtitle:"We\'ve got the right hat for everyone.",
+            //     buttons:[
+            //       {
+            //         type:"web_url",
+            //         url:"https://petersapparel.parseapp.com/view_item?item_id=100",
+            //         title:"View Website"
+            //       },
+            //       {
+            //         type:"postback",
+            //         title:"Start Chatting",
+            //         payload:"USER_DEFINED_PAYLOAD"
+            //       }              
+            //     ]
+            //   }
+            // ]
+          }
+        }
+      }
+  };
+
+  return messageData;
+}
+
+
+
+
+
 
 function sendHelpMessage(recipientId) {
   var messageText = 'Hello! I am here to help you find anything and everything you need for your home :D\n\nIf you\'re looking for. Just ask for something you\'re looking for!\n\nIf you need furniture just ask and I\ll help you find some! You can get specfic as well. Ask for chairs, beds, tables, etc. and I will help you :D';
@@ -618,8 +733,8 @@ function sendTextMessage(recipientId, messageText) {
  */
 function sendSimplifyTextMessage(recipientId, messageText) {
   // extract keyword
-  //var extractedKeywords = keywordExtractor.extract(messageText, {language:"english", remove_digits: true, return_changed_case: true, remove_duplicates: true});
-  //var extractedText = extractedKeywords.toString();
+  // var extractedKeywords = keywordExtractor.extract(messageText, {language:"english", remove_digits: true, return_changed_case: true, remove_duplicates: true});
+  // var extractedText = extractedKeywords.toString();
 
   var messageData = {
     recipient: {
