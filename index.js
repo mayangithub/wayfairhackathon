@@ -757,9 +757,10 @@ function callSendAPI(messageData) {
 // app.set('views', __dirname + '/views');
 // app.set('view engine', 'ejs');
 
-// app.get('/', function(request, response) {
-//   response.render('pages/index');
-// });
+app.get('/', function (req, res) {
+    res.send('This is TestBot Server');
+});
+
 
 
 app.listen(app.get('port'), function() {
