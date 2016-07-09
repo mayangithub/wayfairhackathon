@@ -348,6 +348,7 @@ function receivedMessageRead(event) {
 
   console.log("Received message read event for watermark %d and sequence " +
     "number %d", watermark, sequenceNumber);
+  sendTextMessage(senderID, "I saw that.");
 }
 
 /*
@@ -504,7 +505,7 @@ function sendButtonMessage(recipientId) {
           }, {
             type: "phone_number",
             title: "Call Phone Number",
-            payload: "+16505551234"
+            payload: "+18582089228"
           }]
         }
       }
@@ -751,14 +752,11 @@ function callSendAPI(messageData) {
 }
 
 
-// app.use(express.static(__dirname + '/public'));
-
 // views is directory for all template files
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.get('/', function(req, res) {
-  // res.send(JSON.stringify(req.params.challenge));
   response.render('pages/index');
 });
 
