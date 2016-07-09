@@ -20,6 +20,7 @@ const
   //keywordExtractor = require("keyword-extractor");
 
 var app = express();
+var http = require("http");
 
 app.set('port', process.env.PORT || 5000);
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
@@ -52,6 +53,59 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
   process.exit(1);
 }
 
+var options = {
+  host: 'www.wayfair.com',
+  port: 80,
+  path: '/keyword.php?keyword=Beds&command=dosearch&dept=0&_format=json',
+  method: 'GET'
+};
+
+/**
+ * Build out the options object for the request by sending in a keyword
+ *
+ */
+function buildOptions(keyword) {
+  return {
+    host: 'www.wayfair.com',
+    port: 80,
+    path: '/keyword.php?keyword=' + keyword + '&command=dosearch&dept=0&_format=json',
+    method: 'GET'
+  };
+}
+
+
+app.get('/testing', function(request, response) {
+
+  console.log("rest::getJSON");
+
+  var prot = http;
+  var req = prot.request(options, function(res) {
+    var output = '';
+    console.log(options.host + ':' + res.statusCode);
+
+    res.on('data', function (chunk) {
+      output += chunk;
+    });
+
+    res.on('end', function() {
+      var obj = JSON.parse(output);
+      var products = obj.product_collection;
+      for (var i = 0; i < 5; i++) {
+        console.log(products[i].name);
+      }
+      logs()
+      res.send('done');
+    });
+  });
+
+  req.on('error', function(err) {
+    console.log('error: ' + err);
+  });
+
+  req.end();
+  response.send('completed');
+});
+
 /*
  * Use your own validation token. Check that the token used in the Webhook 
  * setup is the same token used here.
@@ -68,7 +122,9 @@ app.get('/webhook', function(req, res) {
   }  
 });
 
-
+function logs(){
+  console.log('calling');
+}
 /*
  * All callbacks for Messenger are POST-ed. They will be sent to the same
  * webhook. Be sure to subscribe your app to your page to receive callbacks
@@ -269,19 +325,19 @@ function receivedMessage(event) {
 
       case 'quick reply':
         sendQuickReply(senderID);
-        break        
+        break;
 
       case 'read receipt':
         sendReadReceipt(senderID);
-        break        
+        break;
 
       case 'typing on':
         sendTypingOn(senderID);
-        break        
+        break;
 
       case 'typing off':
         sendTypingOff(senderID);
-        break        
+        break;
 
       default:
         sendSimplifyTextMessage(senderID, messageText);
