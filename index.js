@@ -21,7 +21,7 @@ const
 var app = express();
 
 app.set('port', process.env.PORT || 5000);
-// app.use(bodyParser.json({ verify: verifyRequestSignature }));
+app.use(bodyParser.json({ verify: verifyRequestSignature }));
 app.use(express.static('public'));
 
 
@@ -137,7 +137,7 @@ function verifyRequestSignature(req, res, buf) {
                         .digest('hex');
 
     if (signatureHash != expectedHash) {
-      throw new Error("Couldn't validate the request signature." + signatureHash);
+      //throw new Error("Couldn't validate the request signature." + signatureHash);
     }
   }
 }
