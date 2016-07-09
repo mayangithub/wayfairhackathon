@@ -383,7 +383,9 @@ function keyword(senderID, messageText) {
 
   req.setTimeout(5000);
 
-  req.setHeader('Content-Type', 'application/json');
+  req.setHeader('Content-Type', 'application/json; charset=utf-8');
+
+  console.log("request:" + req.content);
 
   req.on('error', function(err) {
     console.log('error: ' + err);
