@@ -400,27 +400,50 @@ function sendImageMessage(recipientId) {
     recipient: {
       id: recipientId
     },
-    message: {
-      attachment: {
-        type: "template",
-        payload:{
-          template_type: "generic",
-          elements: [
-            {
-              type: "image",
-              title: "This is an oculus"
-              image_url: "http://messengerdemo.parseapp.com/img/rift.png",
-              subtitle: "rift!"
-            },
-            {
-              type: "image",
-              image_url: "https://secure.img2.wfrcdn.com/lf/49/hash/24871/10220673/1/Glamour%2B13.5%2522%2BOval%2BPlatter.jpg",
-              title: "The greatest platter in history!"
-            }
-          ]
+    message:{
+        attachment:{
+          type:"template",
+          payload:{
+            template_type:"generic",
+            elements:[
+              {
+                title:"Welcome to Peter\'s Hats",
+                image_url:"http://petersapparel.parseapp.com/img/item100-thumb.png",
+                subtitle:"We\'ve got the right hat for everyone.",
+                buttons:[
+                  {
+                    type:"web_url",
+                    url:"https://petersapparel.parseapp.com/view_item?item_id=100",
+                    title:"View Website"
+                  },
+                  {
+                    type:"postback",
+                    title:"Start Chatting",
+                    payload:"USER_DEFINED_PAYLOAD"
+                  }              
+                ]
+              },
+              {
+                title:"Welcome to asdfasdf",
+                image_url:"http://petersapparel.parseapp.com/img/item100-thumb.png",
+                subtitle:"We\'ve got the right hat for everyone.",
+                buttons:[
+                  {
+                    type:"web_url",
+                    url:"https://petersapparel.parseapp.com/view_item?item_id=100",
+                    title:"View Website"
+                  },
+                  {
+                    type:"postback",
+                    title:"Start Chatting",
+                    payload:"USER_DEFINED_PAYLOAD"
+                  }              
+                ]
+              }
+            ]
+          }
         }
       }
-    }
   };
 
   callSendAPI(messageData);
