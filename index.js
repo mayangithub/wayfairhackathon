@@ -618,10 +618,7 @@ function receivedMessage(event) {
     } else if (/sofas?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[13], color);
       return;
-    } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText)) {
-      sendBestSellersMessage(senderID, categories[4], color);
-      return;
-    } else if (/luck?/i.test(messageText) || /rand(om)?/i.test(messageText)) {
+    } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText) || /luck?/i.test(messageText)) {
       sendBestSellersMessage(senderID);
       return;
     }
@@ -1262,15 +1259,63 @@ function sendIdeasButtonMessage(recipientId) {
           buttons:[{
             type: "postback",
             title: "Rooms",
-            payload: "Rooms"
+            payload: {
+              template_type: "button",
+              text: "Which room are you interested in?",
+              buttons:[{
+                type: "postback",
+                title: "Kid's Room",
+                payload: "kid's room"
+              }, {
+                type: "postback",
+                title: "Nursery",
+                payload: "nursery"
+              }, {
+                type: "postback",
+                title: "Game Room",
+                payload: "game room"
+              }]
+            }
           }, {
             type: "postback",
             title: "Styles",
-            payload: "Styles"
+            payload: {
+              template_type: "button",
+              text: "Which style are you interested in?",
+              buttons:[{
+                type: "postback",
+                title: "Country",
+                payload: "country"
+              }, {
+                type: "postback",
+                title: "Electric",
+                payload: "electric"
+              }, {
+                type: "postback",
+                title: "Contemporary",
+                payload: "contemporary"
+              }]
+            }
           }, {
             type: "postback",
             title: "Housekeeping",
-            payload: "Housekeeping"
+            payload: {
+              template_type: "button",
+              text: "What clutter do you want to deal with?",
+              buttons:[{
+                type: "postback",
+                title: "Cleaning",
+                payload: "cleaning"
+              }, {
+                type: "postback",
+                title: "Laundry Room",
+                payload: "laundry room"
+              }, {
+                type: "postback",
+                title: "Closet & Storage",
+                payload: "closet"
+              }]
+            }
           }]
         }
       }
