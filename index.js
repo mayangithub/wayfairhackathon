@@ -618,10 +618,7 @@ function receivedMessage(event) {
     } else if (/sofas?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[13], color);
       return;
-    } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText)) {
-      sendBestSellersMessage(senderID, categories[4], color);
-      return;
-    } else if (/luck?/i.test(messageText) || /rand(om)?/i.test(messageText)) {
+    } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText) || /luck?/i.test(messageText)) {
       sendBestSellersMessage(senderID);
       return;
     }
