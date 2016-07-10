@@ -605,7 +605,7 @@ function receivedMessage(event) {
         sendIdeasButtonMessage(senderID);
         break;
 
-      case 'Rooms':
+      case 'rooms':
         sendRoomsButtonMessage(senderID);
         break;
 
@@ -1264,6 +1264,7 @@ function sendRoomsButtonMessage(recipientId) {
       id: recipientId
     },
     message: {
+      is_echo:true,
       attachment: {
         type: "template",
         payload: {
@@ -1272,15 +1273,15 @@ function sendRoomsButtonMessage(recipientId) {
           buttons:[{
             type: "postback",
             title: "Kid's Room",
-            payload: "Kid's Room"
+            payload: "kid's room"
           }, {
             type: "postback",
             title: "Nursery",
-            payload: "Nursery"
+            payload: "nursery"
           }, {
             type: "postback",
             title: "Game Room",
-            payload: "Game Room"
+            payload: "game room"
           }]
         }
       }
