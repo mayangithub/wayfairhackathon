@@ -51,17 +51,30 @@ const PAGE_ACCESS_TOKEN = (process.env.MESSENGER_PAGE_ACCESS_TOKEN) ?
 
 const BEDS_OPTIONS = config.get('bedsOptions');
 
+
 if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
   console.error("Missing config values");
   process.exit(1);
 }
 
+const CATEGORY_POSITION = 4;
+
+var categories = [
+    'beds',
+    'sheets',
+    'bedding+sets',
+    'wall+mirrors',
+    'table+lamps'
+  ];
+
 // Example endpoint that hits the wayfair endpoint and pulls the appropriate data it needs to build out our response
 app.get('/run_script', function(request, response) {
 
-  console.log("rest::getJSON");
+  console.log("Start script ---->");
 
   var prot = http;
+  var options = buildOptions(categories[CATEGORY_POSITION]);
+
   var req = prot.request(options, function(res) {
     var output = '';
     console.log(options.host + ':' + res.statusCode);
@@ -72,12 +85,6 @@ app.get('/run_script', function(request, response) {
 
     res.on('end', function() {
       var obj = JSON.parse(output);
-
-
-
-
-
-
 
       console.log('Building response cards');
       // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
@@ -113,16 +120,14 @@ app.get('/run_script', function(request, response) {
           }
       };
 
-      fs.writeFile("testFile.txt", JSON.stringify(messageData), function(err) {
+      console.log('writing data for ' + categories[CATEGORY_POSITION]);
+      fs.writeFile(categories[CATEGORY_POSITION] + '.txt', JSON.stringify(messageData), function(err) {
         if(err) {
-            return console.log(err);
+          return console.log(err);
         }
 
         console.log("The file was saved!");
       });
-
-      var contents = fs.readFileSync('testFile', 'utf8');
-      console.log(JSON.parse(contents));
     });
   });
 
@@ -133,10 +138,6 @@ app.get('/run_script', function(request, response) {
   req.end();
   response.send('completed');
 });
-
-function logs(){
-  console.log('calling');
-}
 
 /*
  * Use your own validation token. Check that the token used in the Webhook 
@@ -312,8 +313,24 @@ function receivedMessage(event) {
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
     switch (messageText) {
-      case 'beds':
-        sendBedsMessage(senderID);
+      case categories[0]:
+        sendCategoryMessage(senderID, categories[0]);
+        break;
+
+      case categories[1]:
+        sendCategoryMessage(senderID, categories[1]);
+        break;
+
+      case categories[2]:
+        sendCategoryMessage(senderID, categories[2]);
+        break;
+
+      case categories[3]:
+        sendCategoryMessage(senderID, categories[3]);
+        break;
+
+      case categories[4]:
+        sendCategoryMessage(senderID, categories[4]);
         break;
 
       case 'help':
@@ -380,6 +397,19 @@ function receivedMessage(event) {
     sendTextMessage(senderID, "Message with attachment received");
   }
 }
+
+
+
+function sendCategoryMessage(recipientId, category) {
+  var contents = fs.readFileSync(category + '.txt', 'utf8');
+  var messageData = JSON.parse(contents);
+  messageData.recipient.id = recipientId;
+
+  console.log(messageData.elements);
+  callSendAPI(messageData);
+}
+
+
 
 function sendBedsMessage(recipientId) {
   var contents = fs.readFileSync('testFile.txt', 'utf8');
