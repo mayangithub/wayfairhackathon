@@ -734,8 +734,6 @@ function sendBestSellersMessage(recipientId) {
   var newMessageData = generateRandomBestSellers(messageData, recipientId);
 
   console.log("new message best seller data: " + newMessageData);
-  var greetingText = "Good Luck! Here's our Best Sellers!";
-  sendTextMessage(recipientId, greetingText);
   callSendAPI(newMessageData);
 }
 
