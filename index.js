@@ -1259,7 +1259,45 @@ function sendIdeasButtonMessage(recipientId) {
           buttons:[{
             type: "postback",
             title: "Rooms",
-            payload: 'room'
+            payload:{
+              template_type:"generic",
+                  elements:[
+                {
+                  title:"Welcome to Peter\'s Hats",
+                  image_url:"http://petersapparel.parseapp.com/img/item100-thumb.png",
+                  subtitle:"We\'ve got the right hat for everyone.",
+                  buttons:[
+                    {
+                      type:"web_url",
+                      url:"https://petersapparel.parseapp.com/view_item?item_id=100",
+                      title:"View Website"
+                    },
+                    {
+                      type:"postback",
+                      title:"Start Chatting",
+                      payload:"USER_DEFINED_PAYLOAD"
+                    }
+                  ]
+      },
+      {
+        title:"Welcome to asdfasdf",
+        image_url:"http://petersapparel.parseapp.com/img/item100-thumb.png",
+        subtitle:"We\'ve got the right hat for everyone.",
+        buttons:[
+          {
+            type:"web_url",
+            url:"https://petersapparel.parseapp.com/view_item?item_id=100",
+            title:"View Website"
+          },
+          {
+            type:"postback",
+            title:"Start Chatting",
+            payload:"USER_DEFINED_PAYLOAD"
+          }
+        ]
+      }
+    ]
+  }
           }, {
             type: "postback",
             title: "Styles",
