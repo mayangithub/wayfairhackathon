@@ -1254,16 +1254,7 @@ function sendIdeasButtonMessage(recipientId) {
           buttons:[{
             type: "postback",
             title: "Rooms",
-            payload:{
-              template_type:"generic",
-                  elements:[
-                    {
-                      title: "Welcome to Peter\'s Hats",
-                      image_url: "http://petersapparel.parseapp.com/img/item100-thumb.png",
-                      subtitle: "We\'ve got the right hat for everyone."
-                    }
-    ]
-  }
+            payload: 'lucky'
           }, {
             type: "postback",
             title: "Styles",
