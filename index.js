@@ -313,23 +313,23 @@ function receivedMessage(event) {
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
     switch (messageText) {
-      case categories[0].replace(/+/g, ' '):
+      case categories[0].replace(/\+/g, ' '):
         sendCategoryMessage(senderID, categories[0]);
         break;
 
-      case categories[1].replace(/+/g, ' '):
+      case categories[1].replace(/\+/g, ' '):
         sendCategoryMessage(senderID, categories[1]);
         break;
 
-      case categories[2].replace(/+/g, ' '):
+      case categories[2].replace(/\+/g, ' '):
         sendCategoryMessage(senderID, categories[2]);
         break;
 
-      case categories[3].replace(/ /g, ' '):
+      case categories[3].replace(/\+/g, ' '):
         sendCategoryMessage(senderID, categories[3]);
         break;
 
-      case categories[4].replace(/+/g, ' '):
+      case categories[4].replace(/\+/g, ' '):
         sendCategoryMessage(senderID, categories[4]);
         break;
 
