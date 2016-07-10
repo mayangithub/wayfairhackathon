@@ -628,6 +628,9 @@ function receivedMessage(event) {
     } else if (/thanks?/i.test(messageText) || /thank you/i.test(messageText) || /danke/i.test(messageText)) {
       sendYourWelcomeMessage(senderID);
       return;
+    } else if (/idea?/gi.test(messageText)) {
+      sendIdeasButtonMessage(senderID);
+      return;
     } else if (/hello/i.test(messageText) || /hi/i.test(messageText) || /greetings/i.test(messageText)) {
       sendGreetingsMessage(senderID);
       return;
@@ -635,10 +638,6 @@ function receivedMessage(event) {
 
     console.log(messageText);
     switch (messageText) {
-      case 'ideas':
-        sendIdeasButtonMessage(senderID);
-        break;
-
       case 'help':
         sendHelpMessage(senderID);
         break;
