@@ -628,7 +628,7 @@ function receivedMessage(event) {
     } else if (/thanks?/i.test(messageText) || /thank you/i.test(messageText) || /danke/i.test(messageText)) {
       sendYourWelcomeMessage(senderID);
       return;
-    } else if (/idea?/gi.test(messageText)) {
+    } else if (/idea?/i.test(messageText) || /inspiration?/i.test(messageText)) {
       sendIdeasButtonMessage(senderID);
       return;
     } else if (/hello/i.test(messageText) || /hi/i.test(messageText) || /greetings/i.test(messageText)) {
