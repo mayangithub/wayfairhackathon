@@ -17,7 +17,6 @@ const
   express = require('express'),
   https = require('https'),  
   request = require('request');
-  //keywordExtractor = require("keyword-extractor");
 
 var app = express();
 var fs = require('fs');
@@ -57,7 +56,7 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
   process.exit(1);
 }
 
-const CATEGORY_POSITION = 4;
+const CATEGORY_POSITION = 2;
 
 var categories = [
     'beds',
@@ -67,17 +66,22 @@ var categories = [
     'table+lamps'
   ];
 
-// Example endpoint that hits the wayfair endpoint and pulls the appropriate data it needs to build out our response
-app.get('/run_script', function(request, response) {
 
-  console.log("Start script ---->");
+var best_seller_api = {
+  host: 'www.wayfair.com',
+  port: 80,
+  path: '/v/best_sellers/display_best_sellers?_format=json&product_count=100&_format=json',
+  method: 'GET'
+};
 
-  var prot = http;
-  var options = buildOptions(categories[CATEGORY_POSITION]);
 
-  var req = prot.request(options, function(res) {
+  // Example endpoint that hits the wayfair endpoint and pulls the best sellers product data it needs to build out our response
+  app.get('/pull_best_sellers', function(request, response) {
+    console.log("rest::getJSON");
+    var prot = http;
+    var req = prot.request(best_seller_api, function(res) {
     var output = '';
-    console.log(options.host + ':' + res.statusCode);
+    console.log(best_seller_api.host + ':' + res.statusCode);
 
     res.on('data', function (chunk) {
       output += chunk;
@@ -85,7 +89,63 @@ app.get('/run_script', function(request, response) {
 
     res.on('end', function() {
       var obj = JSON.parse(output);
+      console.log('Building response cards');
+      // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
+      var productsArray = obj.product_collection;
+      var productCount = obj.product_count;
+      var myElements = [];
+      console.log('product count for best sellers: '+ productCount);
+      for (var i = 0; i < productCount; i++) {
+        var card = {};
+        card.title = productsArray[i].name;
+        card.image_url = productsArray[i].image_url;
+        card.subtitle = '$' + productsArray[i].list_price;
+        var buyButton = {};
+        buyButton.type = 'web_url';
+        buyButton.title = 'Purchase';
+        buyButton.url = productsArray[i].product_url;
+        card.buttons = [buyButton];
+        myElements.push(card);
+      }
 
+      var messageData = {
+        recipient: {
+        },
+        message:{
+          attachment:{
+            type:"template",
+            payload:{
+              template_type:"generic",
+              elements: myElements
+            }
+          }
+        }
+      };
+
+      fs.writeFile("bestSellerFile.txt", JSON.stringify(messageData), function(err) {
+        if(err) {
+          return console.log(err);
+        }
+        console.log("The file was saved!");
+      });
+    });
+  });
+  req.on('error', function(err) {
+    console.log('error: ' + err);
+  });
+  req.end();
+  response.send('completed');
+});
+
+  // Example endpoint that hits the wayfair endpoint and pulls the appropriate data it needs to build out our response
+  app.get('/run_script', function(request, response) {
+
+    console.log("Start script ---->");
+
+    var prot = http;
+    var options = buildOptions(categories[CATEGORY_POSITION]);
+
+    var req = prot.request(options, function(res) {
       console.log('Building response cards');
       // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
       var productsArray = obj.product_collection;
@@ -130,17 +190,6 @@ app.get('/run_script', function(request, response) {
       });
     });
   });
-
-  req.on('error', function(err) {
-    console.log('error: ' + err);
-  });
-
-  req.end();
-  response.send('completed');
-});
-
-
-
 
 /**
  * get idea and advice posts info
@@ -413,23 +462,27 @@ function receivedMessage(event) {
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
     switch (messageText) {
-      case categories[0]:
+      case 'lucky':
+        sendBestSellersMessage(senderID);
+        break;
+
+      case categories[0].replace(/\+/g, ' '):
         sendCategoryMessage(senderID, categories[0]);
         break;
 
-      case categories[1]:
+      case categories[1].replace(/\+/g, ' '):
         sendCategoryMessage(senderID, categories[1]);
         break;
 
-      case categories[2]:
+      case categories[2].replace(/\+/g, ' '):
         sendCategoryMessage(senderID, categories[2]);
         break;
 
-      case categories[3]:
+      case categories[3].replace(/\+/g, ' '):
         sendCategoryMessage(senderID, categories[3]);
         break;
 
-      case categories[4]:
+      case categories[4].replace(/\+/g, ' '):
         sendCategoryMessage(senderID, categories[4]);
         break;
 
@@ -491,7 +544,8 @@ function receivedMessage(event) {
 
       default:
         // keyword(senderID, messageText);
-        sendSimplifyTextMessage(senderID, messageText);
+        // sendSimplifyTextMessage(senderID, messageText);
+        sendErrorMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -519,6 +573,58 @@ function sendBedsMessage(recipientId) {
 
   console.log(messageData.elements);
   callSendAPI(messageData);
+}
+
+function sendBestSellersMessage(recipientId) {
+  var contents = fs.readFileSync('bestSellerFile.txt', 'utf8');
+
+  var messageData = JSON.parse(contents);
+  messageData.recipient.id = recipientId;
+
+  console.log(messageData.elements);
+
+  var newMessageData = generateRandomBestSellers(messageData, recipientId);
+
+  console.log("new message best seller data: " + newMessageData);
+  callSendAPI(newMessageData);
+}
+
+
+function generateRandomBestSellers(messageData, recipientId){
+  var elements = messageData.message.attachment.payload.elements;
+  var productCount = elements.length;
+  var myElements = [];
+  var genNumbers = [];
+
+  for (var i = 0; i < 4; i++) {
+    var randomNo = Math.floor(Math.random() * productCount-1);
+    if(genNumbers.indexOf(randomNo) != -1){ // duplicate
+      console.log('got duplicate numbers');
+      i--;
+      continue;
+    }
+    genNumbers.push(randomNo);
+    myElements.push(elements[randomNo]);
+  }
+
+  console.log("randomly generated best seller element:" + myElements);
+
+  var newMessageData = {
+    recipient: {
+      id: recipientId
+    },
+    message:{
+      attachment:{
+        type:"template",
+        payload:{
+          template_type:"generic",
+          elements: myElements
+        }
+      }
+    }
+  };
+
+  return newMessageData;
 }
 
 /**
@@ -587,6 +693,44 @@ function keyword(senderID, messageText) {
 }
 
 
+/**
+ * The error response if we couldn't parse through the user's text
+ */
+function sendErrorMessage(recipientId, message) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'Sorry we don\'t know what you mean by ' + message + '.\n\nTry enter a keyword for an product you would like to buy or type \'help\'\n\nHere is a picture of a cat for inspiration :)',
+      metadata: "ERROR_MESSAGE_RESPONSE"
+    }
+  };
+
+  callSendAPI(messageData);
+  // Create random cat photo
+  var x = Math.floor(Math.random() * 300 + 100);
+  var y = Math.floor(Math.random() * 300 + 100);
+  var myUrl = 'http://placekitten.com/g/' + x.toString() + '/' + y.toString();
+  console.log(myUrl);
+  // myUrl = 'http://placekitten.com/g/300/300';
+
+  var newPictureMessage = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "image",
+        payload: {
+          url: myUrl
+        }
+      }
+    }
+  };
+
+  callSendAPI(newPictureMessage);
+}
 
 /**
  *
@@ -650,8 +794,7 @@ function sendHelpMessage(recipientId) {
   };
 
   callSendAPI(messageData);
-  messageData.message.text = 'This is a second message';
-  callSendAPI(messageData);
+
 }
 
 /*
@@ -1198,9 +1341,9 @@ function callSendAPI(messageData) {
         recipientId);
       }
     } else {
-      var errorMessage = response.error.message;
-      var errorCode = response.error.code;
-      console.error("Unable to send message. Error %d: %s", 
+      var errorMessage = 'something went wrng';//response.error.message;
+      var errorCode = 42;//response.error.code;
+      console.error("Unable to send message. Error", 
         errorCode, errorMessage);
     }
   });  
