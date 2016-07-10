@@ -1224,7 +1224,6 @@ function sendIdeasButtonMessage(recipientId) {
       id: recipientId
     },
     message: {
-      "is_echo":true,
       attachment: {
         type: "template",
         payload: {
