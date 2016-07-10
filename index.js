@@ -1284,7 +1284,7 @@ function sendPositiveResponseMessage(recipientId) {
       id: recipientId
     },
     message: {
-      text: 'I am to please ;)',
+      text: 'I aim to please ;)',
       metadata: "POSITIVE_RESPONSE_MESSAGE"
     }
   };
