@@ -466,6 +466,10 @@ function receivedMessage(event) {
         sendBestSellersMessage(senderID);
         break;
 
+      case 'ideas':
+        sendIdeasButtonMessage(senderID);
+        break;
+
       case categories[0].replace(/\+/g, ' '):
         sendCategoryMessage(senderID, categories[0]);
         break;
@@ -1114,6 +1118,42 @@ function sendButtonMessage(recipientId) {
 }
 
 /*
+ * Send a idea buttons message using the Send API.
+ *
+ */
+function sendIdeasButtonMessage(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      "is_echo":true,
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: "What kind of ideas do you need?",
+          buttons:[{
+            type: "postback",
+            title: "Rooms",
+            payload: "Rooms"
+          }, {
+            type: "postback",
+            title: "Styles",
+            payload: "Styles"
+          }, {
+            type: "postback",
+            title: "Housekeeping",
+            payload: "Housekeeping"
+          }]
+        }
+      }
+    }
+  };
+
+  callSendAPI(messageData);
+}
+/*
  * Send a Structured Message (Generic Message type) using the Send API.
  *
  */
@@ -1343,7 +1383,7 @@ function callSendAPI(messageData) {
     } else {
       var errorMessage = 'something went wrng';//response.error.message;
       var errorCode = 42;//response.error.code;
-      console.error("Unable to send message. Error", 
+      console.error("Unable to send message. Error",
         errorCode, errorMessage);
     }
   });  
