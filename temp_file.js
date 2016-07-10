@@ -17,6 +17,7 @@ const
   express = require('express'),
   https = require('https'),  
   request = require('request');
+  //keywordExtractor = require("keyword-extractor");
 
 var app = express();
 var fs = require('fs');
@@ -56,102 +57,15 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
   process.exit(1);
 }
 
-const CATEGORY_POSITION = 0;
-const COLOR_OPTIONS = 0;
+const CATEGORY_POSITION = 4;
 
 var categories = [
     'beds',
     'sheets',
     'bedding+sets',
     'wall+mirrors',
-    'table+lamps',
-    'headboards',
-    'nightstands',
-    'dressers',
-    'armoires',
-    'bed+pillow',
-    'hallway+runner',
-    'computer+desks',
-    'dining+chairs',
-    'sofas'
+    'table+lamps'
   ];
-
-var colors = [
-  'red',
-  'blue',
-  'green'
-];
-
-
-var best_seller_api = {
-  host: 'www.wayfair.com',
-  port: 80,
-  path: '/v/best_sellers/display_best_sellers?_format=json&product_count=100&_format=json',
-  method: 'GET'
-};
-
-
-  // Example endpoint that hits the wayfair endpoint and pulls the best sellers product data it needs to build out our response
-  app.get('/pull_best_sellers', function(request, response) {
-    console.log("rest::getJSON");
-    var prot = http;
-    var req = prot.request(best_seller_api, function(res) {
-    var output = '';
-    console.log(best_seller_api.host + ':' + res.statusCode);
-
-    res.on('data', function (chunk) {
-      output += chunk;
-    });
-
-    res.on('end', function() {
-      var obj = JSON.parse(output);
-      console.log('Building response cards');
-      // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
-      var productsArray = obj.product_collection;
-      var productCount = obj.product_count;
-      var myElements = [];
-      console.log('product count for best sellers: '+ productCount);
-      for (var i = 0; i < productCount; i++) {
-        var card = {};
-        card.title = productsArray[i].name;
-        card.image_url = productsArray[i].image_url;
-        card.subtitle = '$' + productsArray[i].list_price;
-        var buyButton = {};
-        buyButton.type = 'web_url';
-        buyButton.title = 'Purchase';
-        buyButton.url = productsArray[i].product_url;
-        card.buttons = [buyButton];
-        myElements.push(card);
-      }
-
-      var messageData = {
-        recipient: {
-        },
-        message:{
-          attachment:{
-            type:"template",
-            payload:{
-              template_type:"generic",
-              elements: myElements
-            }
-          }
-        }
-      };
-
-      fs.writeFile("bestSellerFile.txt", JSON.stringify(messageData), function(err) {
-        if(err) {
-          return console.log(err);
-        }
-        console.log("The file was saved!");
-      });
-    });
-  });
-  req.on('error', function(err) {
-    console.log('error: ' + err);
-  });
-  req.end();
-  response.send('completed');
-});
 
 // Example endpoint that hits the wayfair endpoint and pulls the appropriate data it needs to build out our response
 app.get('/run_script', function(request, response) {
@@ -208,172 +122,6 @@ app.get('/run_script', function(request, response) {
 
       console.log('writing data for ' + categories[CATEGORY_POSITION]);
       fs.writeFile(categories[CATEGORY_POSITION] + '.txt', JSON.stringify(messageData), function(err) {
-        if(err) {
-          return console.log(err);
-        }
-
-        console.log("The file was saved!");
-      });
-    });
-  });
-
-  req.on('error', function(err) {
-    console.log('error: ' + err);
-  });
-
-  req.end();
-  response.send('completed');
-});
-
-/**
- * get idea and advice posts info
- */
-app.get('/help_big_category_script', function(request, response) {
-
-  console.log("Start help big category script ---->");
-
-  var helper_big_category = [
-    "nursery~8",
-    'game-room~9',
-    "kids-room~12",
-    "contemporary~21",
-    "country~23",
-    "eclectic~24",
-    "glam~26",
-    "industrial~27",
-    "mid-century-modern~28",
-    "parties~47",
-    "cleaning~51",
-    "laundry-room~52",
-    "closet-storage~53",
-    "garage-workspace~55"
-  ];
-
-
-  var protocal = http;
-  var index = 13;
-  // for (var index = 0; index < helper_big_category.length;index++) {
-  var options = buildHelpOptions(helper_big_category[index]);
-
-  var req = protocal.request(options, function(res) {
-    var output = '';
-    console.log('help ' + options.path + ':' + res.statusCode);
-
-    res.on('data', function (chunk) {
-      output += chunk;
-    });
-
-    res.on('end', function() {
-      var obj = JSON.parse(output);
-
-      console.log('Building help response cards');
-      // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
-      var postsArray = obj.pages;
-      var myElements = [];
-      var length = (postsArray.length >= 10) ? 10 : postsArray.length;
-
-      for (var i = 0; i < length; i++) {
-        var card = {};
-        card.title = postsArray[i].vital_data.promotional_title;
-        card.image_url = postsArray[i].vital_data.image_source;
-        card.subtitle = postsArray[i].vital_data.description;
-
-        var readMoreButton = {};
-        readMoreButton.type = 'web_url';
-        readMoreButton.title = 'Read More';
-        readMoreButton.url = postsArray[i].url;
-        card.buttons = [readMoreButton];
-
-        myElements.push(card);
-      }
-
-      var messageData = {
-        recipient: {},
-        message: {
-          attachment: {
-            type: "template",
-            payload: {
-              template_type: "generic",
-              elements: myElements
-            }
-          }
-        }
-      };
-        console.log('writing data for ' + categories[CATEGORY_POSITION] + colors[COLOR_OPTIONS]);
-      fs.writeFile(categories[CATEGORY_POSITION] + colors[COLOR_OPTIONS] + '.txt', JSON.stringify(messageData), function(err) {
-        if(err) {
-          return console.log(err);
-        }
-
-        console.log("The file was saved!");
-      });
-    });
-  });
-
-  req.on('error', function(err) {
-    console.log('error: ' + err);
-  });
-
-  req.end();
-  response.send('completed');
-});
-
-
-// Example endpoint that hits the wayfair endpoint and pulls the appropriate data it needs to build out our response
-app.get('/run_color_script', function(request, response) {
-
-  console.log("Start script ---->");
-
-  var prot = http;
-  var options = buildOptions(colors[COLOR_OPTIONS] + '+' + categories[CATEGORY_POSITION]);
-
-  var req = prot.request(options, function(res) {
-    var output = '';
-    console.log(options.host + ':' + res.statusCode);
-
-    res.on('data', function (chunk) {
-      output += chunk;
-    });
-
-    res.on('end', function() {
-      var obj = JSON.parse(output);
-
-      console.log('Building response cards');
-      // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
-      var productsArray = obj.product_collection;
-      var myElements = [];
-
-      for (var i = 0; i < 4; i++) {
-        var card = {};
-        card.title = productsArray[i].name;
-        card.image_url = productsArray[i].image_url;
-        card.subtitle = '$' + productsArray[i].list_price;
-
-        var buyButton = {};
-        buyButton.type = 'web_url';
-        buyButton.title = 'Purchase';
-        buyButton.url = productsArray[i].product_url;
-        card.buttons = [buyButton];
-
-        myElements.push(card);
-      }
-
-      var messageData = {
-        recipient: {
-        },
-        message:{
-            attachment:{
-              type:"template",
-              payload:{
-                template_type:"generic",
-                elements: myElements
-              }
-            }
-          }
-      };
-
-      console.log('writing data for ' + categories[CATEGORY_POSITION] + colors[COLOR_OPTIONS]);
-      fs.writeFile(categories[CATEGORY_POSITION] + colors[COLOR_OPTIONS] + '.txt', JSON.stringify(messageData), function(err) {
         if(err) {
           return console.log(err);
         }
@@ -561,104 +309,90 @@ function receivedMessage(event) {
   // Put regex right here to parse out keywords
   if (messageText) {
 
-    messageText = messageText.toLowerCase();
-    var colorMatch = /blue|green|red|orange|yellow/ig.exec(messageText);
-
-    var color = '';
-    if (colorMatch) {
-      color = colorMatch[0];
-    }
-
-    // yellow and orange will still do red searches
-    if (color && (color === 'orange' || color === 'yellow')) {
-      color = 'red';
-    }
-
-    // TODO add color files
-    // add more furniture files
-    if (/bedding ?[sets?]?/gi.test(messageText)) {
-      sendCategoryMessage(senderID, categories[2], color);
-      return;
-    } else if (/beds?/gi.test(messageText)) {
-      sendCategoryMessage(senderID, categories[0], color);
-      return;
-    } else if (/sheets?/gi.test(messageText)) {
-      sendCategoryMessage(senderID, categories[1], color);
-      return;
-    } else if (/(wall)? ?mirrors?/gi.test(messageText)) {
-      sendCategoryMessage(senderID, categories[3], color);
-      return;
-    } else if (/(table)? ?lamps?/gi.test(messageText)) {
-      sendCategoryMessage(senderID, categories[4], color);
-      return;
-    } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText)) {
-      sendBestSellersMessage(senderID, categories[4], color);
-      return;
-    }
-
+    // If we receive a text message, check to see if it matches any special
+    // keywords and send back the corresponding example. Otherwise, just echo
+    // the text we received.
     switch (messageText) {
-      case 'lucky':
-        sendBestSellersMessage(senderID);
+      case categories[0].replace(/\+/g, ' '):
+        sendCategoryMessage(senderID, categories[0]);
         break;
 
-      case 'ideas':
-        sendIdeasButtonMessage(senderID);
+      case categories[1].replace(/\+/g, ' '):
+        sendCategoryMessage(senderID, categories[1]);
+        break;
+
+      case categories[2].replace(/\+/g, ' '):
+        sendCategoryMessage(senderID, categories[2]);
+        break;
+
+      case categories[3].replace(/\+/g, ' '):
+        sendCategoryMessage(senderID, categories[3]);
+        break;
+
+      case categories[4].replace(/\+/g, ' '):
+        sendCategoryMessage(senderID, categories[4]);
         break;
 
       case 'help':
         sendHelpMessage(senderID);
         break;
 
+      case 'furniture':
+        sendFurnitureMessage(senderID);
+        break;
+
+      case 'image':
+        sendImageMessage(senderID);
+        break;
+
+      case 'gif':
+        sendGifMessage(senderID);
+        break;
+
+      case 'audio':
+        sendAudioMessage(senderID);
+        break;
+
+      case 'video':
+        sendVideoMessage(senderID);
+        break;
+
+      case 'file':
+        sendFileMessage(senderID);
+        break;
+
+      case 'button':
+        sendButtonMessage(senderID);
+        break;
+
+      case 'generic':
+        sendGenericMessage(senderID);
+        break;
+
+      case 'receipt':
+        sendReceiptMessage(senderID);
+        break;
+
+      case 'quick reply':
+        sendQuickReply(senderID);
+        break;
+
+      case 'read receipt':
+        sendReadReceipt(senderID);
+        break;
+
+      case 'typing on':
+        sendTypingOn(senderID);
+        break;
+
+      case 'typing off':
+        sendTypingOff(senderID);
+        break;
+
       default:
-        sendErrorMessage(senderID, messageText);  
-
-      // case 'image':
-      //   sendImageMessage(senderID);
-      //   break;
-
-      // case 'gif':
-      //   sendGifMessage(senderID);
-      //   break;
-
-      // case 'audio':
-      //   sendAudioMessage(senderID);
-      //   break;
-
-      // case 'video':
-      //   sendVideoMessage(senderID);
-      //   break;
-
-      // case 'file':
-      //   sendFileMessage(senderID);
-      //   break;
-
-      // case 'button':
-      //   sendButtonMessage(senderID);
-      //   break;
-
-      // case 'generic':
-      //   sendGenericMessage(senderID);
-      //   break;
-
-      // case 'receipt':
-      //   sendReceiptMessage(senderID);
-      //   break;
-
-      // case 'quick reply':
-      //   sendQuickReply(senderID);
-      //   break;
-
-      // case 'read receipt':
-      //   sendReadReceipt(senderID);
-      //   break;
-
-      // case 'typing on':
-      //   sendTypingOn(senderID);
-      //   break;
-
-      // case 'typing off':
-      //   sendTypingOff(senderID);
-      //   break;
+        // keyword(senderID, messageText);
+        // sendSimplifyTextMessage(senderID, messageText);
+        sendErrorMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -667,9 +401,7 @@ function receivedMessage(event) {
 
 
 
-function sendCategoryMessage(recipientId, category, color) {
-  // name the files after the categorycolor.txt
-  category = color ? category + color : category;
+function sendCategoryMessage(recipientId, category) {
   var contents = fs.readFileSync(category + '.txt', 'utf8');
   var messageData = JSON.parse(contents);
   messageData.recipient.id = recipientId;
@@ -690,58 +422,6 @@ function sendBedsMessage(recipientId) {
   callSendAPI(messageData);
 }
 
-function sendBestSellersMessage(recipientId) {
-  var contents = fs.readFileSync('bestSellerFile.txt', 'utf8');
-
-  var messageData = JSON.parse(contents);
-  messageData.recipient.id = recipientId;
-
-  console.log(messageData.elements);
-
-  var newMessageData = generateRandomBestSellers(messageData, recipientId);
-
-  console.log("new message best seller data: " + newMessageData);
-  callSendAPI(newMessageData);
-}
-
-
-function generateRandomBestSellers(messageData, recipientId){
-  var elements = messageData.message.attachment.payload.elements;
-  var productCount = elements.length;
-  var myElements = [];
-  var genNumbers = [];
-
-  for (var i = 0; i < 4; i++) {
-    var randomNo = Math.floor(Math.random() * productCount-1);
-    if(genNumbers.indexOf(randomNo) != -1){ // duplicate
-      console.log('got duplicate numbers');
-      i--;
-      continue;
-    }
-    genNumbers.push(randomNo);
-    myElements.push(elements[randomNo]);
-  }
-
-  console.log("randomly generated best seller element:" + myElements);
-
-  var newMessageData = {
-    recipient: {
-      id: recipientId
-    },
-    message:{
-      attachment:{
-        type:"template",
-        payload:{
-          template_type:"generic",
-          elements: myElements
-        }
-      }
-    }
-  };
-
-  return newMessageData;
-}
-
 /**
  * Build out the options object for the request by sending in a keyword
  */
@@ -752,17 +432,6 @@ function buildOptions(keyword) {
     host: 'www.wayfair.com',
     port: 80,
     path: '/keyword.php?keyword=' + keyword + '&command=dosearch&dept=0&_format=json',
-    method: 'GET'
-  };
-}
-
-function buildHelpOptions(keyword) {
-  // Replace spaces with + and deal with the other url encoding issues later
-  keyword = keyword.replace(/ /g, '+');
-  return {
-    host: 'www.wayfair.com',
-    port: 80,
-    path: '/ideas-and-advice/tag/' + keyword + '?_format=json',
     method: 'GET'
   };
 }
@@ -1178,6 +847,20 @@ function sendSimplifyTextMessage(recipientId, messageText) {
   callSendAPI(messageData);
 }
 
+function sendFurnitureMessage(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: "I see you want some furniture! I would suggest going to Wayfair.com :)",
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
 /*
  * Send a button message using the Send API.
  *
@@ -1214,42 +897,6 @@ function sendButtonMessage(recipientId) {
   callSendAPI(messageData);
 }
 
-/*
- * Send a idea buttons message using the Send API.
- *
- */
-function sendIdeasButtonMessage(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      "is_echo":true,
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "button",
-          text: "What kind of ideas do you need?",
-          buttons:[{
-            type: "postback",
-            title: "Rooms",
-            payload: "Rooms"
-          }, {
-            type: "postback",
-            title: "Styles",
-            payload: "Styles"
-          }, {
-            type: "postback",
-            title: "Housekeeping",
-            payload: "Housekeeping"
-          }]
-        }
-      }
-    }
-  };
-
-  callSendAPI(messageData);
-}
 /*
  * Send a Structured Message (Generic Message type) using the Send API.
  *
@@ -1480,7 +1127,7 @@ function callSendAPI(messageData) {
     } else {
       var errorMessage = 'something went wrng';//response.error.message;
       var errorCode = 42;//response.error.code;
-      console.error("Unable to send message. Error",
+      console.error("Unable to send message. Error", 
         errorCode, errorMessage);
     }
   });  
