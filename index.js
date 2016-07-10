@@ -973,6 +973,8 @@ function receivedPostback(event) {
     case 'cleaning':
     case 'laundry':
     case 'closet':
+      var messageText = "Here's our well-chosen advice for your " + payload + ": ";
+      sendTextMessage(senderID, messageText);
       sendIdeaPostMessage(senderID, payload);
       break;
 
