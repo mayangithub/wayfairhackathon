@@ -592,58 +592,73 @@ function receivedMessage(event) {
     // TODO add color files
     // add more furniture files
     if (/bedding ?[sets?]?/gi.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[2], color);
       return;
     } else if (/beds?/gi.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[0], color);
       return;
     } else if (/sheets?/gi.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[1], color);
       return;
     } else if (/(wall)? ?mirrors?/gi.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[3], color);
       return;
     } else if (/(table)? ?lamps?/gi.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[4], color);
       return;
     } else if (/headboards?/gi.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[5], color);
       return;
     } else if (/nightstands?/gi.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[6], color);
       return;
     } else if (/dressers?/gi.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[7], color);
       return;
     } else if (/armoires?/gi.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[8], color);
       return;
     } else if (/(bed)? ?pillow?/gi.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[9], color);
       return;
     } else if (/(hallway)? ?runner?/gi.test(messageText) || /rugs?/i.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[10], color);
       return;
     } else if (/(computer)? ?desks?/gi.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[11], color);
       return;
     } else if (/(dining)? ?chairs?/gi.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[12], color);
       return;
     } else if (/sofas?/gi.test(messageText) || /couches?/i.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[13], color);
       return;
     } else if (/cat trees?/gi.test(messageText)) {
+      sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[14], color);
       return;
-    } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText) || /luck?/i.test(messageText)) {
+    } else if (/(best)? ?sellers?/i.test(messageText) || /furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText) || /luck?/gi.test(messageText)) {
       sendTextMessage(senderID, "You're lucky! Here are our Best Sellers!");
       sendBestSellersMessage(senderID);
       return;
     } else if (/thanks?/i.test(messageText) || /thank you/i.test(messageText) || /danke/i.test(messageText)) {
       sendYourWelcomeMessage(senderID);
       return;
-    } else if (/ideas?/i.test(messageText) || /inspiration?/i.test(messageText)) {
+    } else if (/ideas?/gi.test(messageText) || /inspiration?/gi.test(messageText)) {
       sendIdeasButtonMessage(senderID);
       return;
     } else if (/awesome/gi.test(messageText) || /you rock/gi.test(messageText) || /yay/gi.test(messageText) || /hurray/gi.test(messageText) || /you rock/gi.test(messageText) || /i love you/gi.test(messageText) || /yes/gi.test(messageText)) {
