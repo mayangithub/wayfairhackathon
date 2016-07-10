@@ -51,17 +51,22 @@ const PAGE_ACCESS_TOKEN = (process.env.MESSENGER_PAGE_ACCESS_TOKEN) ?
 
 const BEDS_OPTIONS = config.get('bedsOptions');
 
+
 if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
   console.error("Missing config values");
   process.exit(1);
 }
 
-var options = {
-  host: 'www.wayfair.com',
-  port: 80,
-  path: '/keyword.php?keyword=Beds&command=dosearch&dept=0&_format=json',
-  method: 'GET'
-};
+const CATEGORY_POSITION = 4;
+
+var categories = [
+    'beds',
+    'sheets',
+    'bedding+sets',
+    'wall+mirrors',
+    'table+lamps'
+  ];
+
 
 var best_seller_api = {
   host: 'www.wayfair.com',
@@ -70,11 +75,12 @@ var best_seller_api = {
   method: 'GET'
 };
 
-// Example endpoint that hits the wayfair endpoint and pulls the best sellers product data it needs to build out our response
-app.get('/pull_best_sellers', function(request, response) {
-  console.log("rest::getJSON");
-  var prot = http;
-  var req = prot.request(best_seller_api, function(res) {
+
+  // Example endpoint that hits the wayfair endpoint and pulls the best sellers product data it needs to build out our response
+  app.get('/pull_best_sellers', function(request, response) {
+    console.log("rest::getJSON");
+    var prot = http;
+    var req = prot.request(best_seller_api, function(res) {
     var output = '';
     console.log(best_seller_api.host + ':' + res.statusCode);
 
@@ -89,7 +95,6 @@ app.get('/pull_best_sellers', function(request, response) {
       var productsArray = obj.product_collection;
       var productCount = obj.product_count;
       var myElements = [];
-
       console.log('product count for best sellers: '+ productCount);
       for (var i = 0; i < productCount; i++) {
         var card = {};
@@ -135,23 +140,15 @@ app.get('/pull_best_sellers', function(request, response) {
   response.send('completed');
 });
 
-// Example endpoint that hits the wayfair endpoint and pulls the appropriate data it needs to build out our response
-app.get('/testing', function(request, response) {
+  // Example endpoint that hits the wayfair endpoint and pulls the appropriate data it needs to build out our response
+  app.get('/run_script', function(request, response) {
 
-  console.log("rest::getJSON");
+    console.log("Start script ---->");
 
-  var prot = http;
-  var req = prot.request(options, function(res) {
-    var output = '';
-    console.log(options.host + ':' + res.statusCode);
+    var prot = http;
+    var options = buildOptions(categories[CATEGORY_POSITION]);
 
-    res.on('data', function (chunk) {
-      output += chunk;
-    });
-
-    res.on('end', function() {
-      var obj = JSON.parse(output);
-
+    var req = prot.request(options, function(res) {
       console.log('Building response cards');
       // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
       var productsArray = obj.product_collection;
@@ -186,30 +183,16 @@ app.get('/testing', function(request, response) {
           }
       };
 
-      fs.writeFile("testFile.txt", JSON.stringify(messageData), function(err) {
+      console.log('writing data for ' + categories[CATEGORY_POSITION]);
+      fs.writeFile(categories[CATEGORY_POSITION] + '.txt', JSON.stringify(messageData), function(err) {
         if(err) {
-            return console.log(err);
+          return console.log(err);
         }
 
         console.log("The file was saved!");
       });
-
-      var contents = fs.readFileSync('testFile', 'utf8');
-      console.log(JSON.parse(contents));
     });
   });
-
-  req.on('error', function(err) {
-    console.log('error: ' + err);
-  });
-
-  req.end();
-  response.send('completed');
-});
-
-function logs(){
-  console.log('calling');
-}
 
 /*
  * Use your own validation token. Check that the token used in the Webhook 
@@ -389,8 +372,24 @@ function receivedMessage(event) {
         sendBestSellersMessage(senderID);
         break;
 
-      case 'beds':
-        sendBedsMessage(senderID);
+      case categories[0].replace(/\+/g, ' '):
+        sendCategoryMessage(senderID, categories[0]);
+        break;
+
+      case categories[1].replace(/\+/g, ' '):
+        sendCategoryMessage(senderID, categories[1]);
+        break;
+
+      case categories[2].replace(/\+/g, ' '):
+        sendCategoryMessage(senderID, categories[2]);
+        break;
+
+      case categories[3].replace(/\+/g, ' '):
+        sendCategoryMessage(senderID, categories[3]);
+        break;
+
+      case categories[4].replace(/\+/g, ' '):
+        sendCategoryMessage(senderID, categories[4]);
         break;
 
       case 'help':
@@ -451,12 +450,26 @@ function receivedMessage(event) {
 
       default:
         // keyword(senderID, messageText);
-        sendSimplifyTextMessage(senderID, messageText);
+        // sendSimplifyTextMessage(senderID, messageText);
+        sendErrorMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
   }
 }
+
+
+
+function sendCategoryMessage(recipientId, category) {
+  var contents = fs.readFileSync(category + '.txt', 'utf8');
+  var messageData = JSON.parse(contents);
+  messageData.recipient.id = recipientId;
+
+  console.log(messageData.elements);
+  callSendAPI(messageData);
+}
+
+
 
 function sendBedsMessage(recipientId) {
   var contents = fs.readFileSync('testFile.txt', 'utf8');
@@ -485,12 +498,9 @@ function buildOptions(keyword) {
   // Replace spaces with + and deal with the other url encoding issues later
   keyword = keyword.replace(/ /g, '+');
   return {
-    //host: 'jsonplaceholder.typicode.com',
     host: 'www.wayfair.com',
     port: 80,
     path: '/keyword.php?keyword=' + keyword + '&command=dosearch&dept=0&_format=json',
-    //path: '/filters/Beds-l12-c46122-O122~Espresso-O127339~FREE+1%5BD%5D+or+2%5BD%5DDay+Shipping-O78269~Yes.html?_format=json',
-    //path: '/photos',
     method: 'GET'
   };
 }
@@ -536,6 +546,44 @@ function keyword(senderID, messageText) {
 }
 
 
+/**
+ * The error response if we couldn't parse through the user's text
+ */
+function sendErrorMessage(recipientId, message) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'Sorry we don\'t know what you mean by ' + message + '.\n\nTry enter a keyword for an product you would like to buy or type \'help\'\n\nHere is a picture of a cat for inspiration :)',
+      metadata: "ERROR_MESSAGE_RESPONSE"
+    }
+  };
+
+  callSendAPI(messageData);
+  // Create random cat photo
+  var x = Math.floor(Math.random() * 300 + 100);
+  var y = Math.floor(Math.random() * 300 + 100);
+  var myUrl = 'http://placekitten.com/g/' + x.toString() + '/' + y.toString();
+  console.log(myUrl);
+  // myUrl = 'http://placekitten.com/g/300/300';
+
+  var newPictureMessage = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "image",
+        payload: {
+          url: myUrl
+        }
+      }
+    }
+  };
+
+  callSendAPI(newPictureMessage);
+}
 
 /**
  *
@@ -599,8 +647,7 @@ function sendHelpMessage(recipientId) {
   };
 
   callSendAPI(messageData);
-  messageData.message.text = 'This is a second message';
-  callSendAPI(messageData);
+
 }
 
 /*
@@ -1147,9 +1194,9 @@ function callSendAPI(messageData) {
         recipientId);
       }
     } else {
-      var errorMessage = response.error.message;
-      var errorCode = response.error.code;
-      console.error("Unable to send message. Error %d: %s", 
+      var errorMessage = 'something went wrng';//response.error.message;
+      var errorCode = 42;//response.error.code;
+      console.error("Unable to send message. Error", 
         errorCode, errorMessage);
     }
   });  
