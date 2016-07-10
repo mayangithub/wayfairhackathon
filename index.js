@@ -142,7 +142,9 @@ app.get('/run_script', function(request, response) {
 
 
 
-
+/**
+ * get idea and advice posts info
+ */
 app.get('/help_big_category_script', function(request, response) {
 
   console.log("Start help big category script ---->");
