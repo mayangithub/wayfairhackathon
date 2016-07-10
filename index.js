@@ -893,7 +893,7 @@ function buildDataFromResponse(recipientId, object) {
 
 
 function sendHelpMessage(recipientId) {
-  var messageText = 'Hello! I am here to help you find anything and everything you need for your home :D\n\nJust ask for something you\'re looking for!\n\nAsk to see any products you might be looking for. You can even specify specific colors!\n\nAsk for IDEAS and I will send you some personalized Wayfair tips\n\nAsk for anything and I will try to help you :D';
+  var messageText = 'Hello! I am here to help you find anything you need for your home :D\n\nJust ask for something you\'re looking for!\n\nAsk to see any products you might be looking for. You can even specify specific colors!\n\nAsk for IDEAS and I will send you some personalized Wayfair tips\n\nAsk for anything and I will try to help you :D';
 
   var messageData = {
     recipient: {
