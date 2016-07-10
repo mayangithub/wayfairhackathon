@@ -629,6 +629,7 @@ function receivedMessage(event) {
       sendYourWelcomeMessage(senderID);
       return;
     } else if (/idea?/i.test(messageText) || /inspiration?/i.test(messageText)) {
+      sendTextMessage(senderID, "You're lucky! Here are our Best Sellers!");
       sendIdeasButtonMessage(senderID);
       return;
     } else if (/hello/i.test(messageText) || /hi/i.test(messageText) || /greetings/i.test(messageText)) {
