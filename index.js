@@ -635,10 +635,6 @@ function receivedMessage(event) {
         sendIdeasButtonMessage(senderID);
         break;
 
-      case 'rooms':
-        sendRoomsButtonMessage(senderID);
-        break;
-
       case 'help':
         sendHelpMessage(senderID);
         break;
@@ -959,6 +955,15 @@ function receivedPostback(event) {
     case 'rooms':
       sendRoomsButtonMessage(senderID);
       break;
+
+    case 'style':
+      sendStylesButtonMessage(senderID);
+      break;
+
+    case 'house':
+      sendHouseKeepingButtonMessage(senderID);
+      break;
+
     default:
       sendTextMessage(senderID, payload);
       break;
@@ -1284,7 +1289,7 @@ function sendIdeasButtonMessage(recipientId) {
 }
 
 /*
- * Send a idea buttons message using the Send API.
+ * Send idea buttons message for rooms category using the Send API.
  *
  */
 function sendRoomsButtonMessage(recipientId) {
@@ -1318,6 +1323,80 @@ function sendRoomsButtonMessage(recipientId) {
 
   callSendAPI(messageData);
 }
+
+/*
+ * Send idea buttons message for styles category using the Send API.
+ *
+ */
+function sendStylesButtonMessage(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: "What style do you like to have?",
+          buttons:[{
+            type: "postback",
+            title: "Contemporary",
+            payload: "contemporary"
+          }, {
+            type: "postback",
+            title: "Country",
+            payload: "country"
+          }, {
+            type: "postback",
+            title: "Glam",
+            payload: "glam"
+          }]
+        }
+      }
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+/*
+ * Send idea buttons message for housekeeping category using the Send API.
+ *
+ */
+function sendHouseKeepingButtonMessage(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: "What clutter do you want to deal with?",
+          buttons:[{
+            type: "postback",
+            title: "Cleaning",
+            payload: "cleaning"
+          }, {
+            type: "postback",
+            title: "Laundry",
+            payload: "laundry"
+          }, {
+            type: "postback",
+            title: "Closet & Storage",
+            payload: "closet"
+          }]
+        }
+      }
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+
 /*
  * Send a Structured Message (Generic Message type) using the Send API.
  *
