@@ -1156,7 +1156,7 @@ function sendGreetingsMessage(recipientId) {
       id: recipientId
     },
     message: {
-      text: ,
+      text: message,
       metadata: "DEVELOPER_DEFINED_METADATA"
     }
   };
