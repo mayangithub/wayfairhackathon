@@ -313,23 +313,23 @@ function receivedMessage(event) {
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
     switch (messageText) {
-      case categories[0]:
+      case categories[0].replace(/+/g, ' '):
         sendCategoryMessage(senderID, categories[0]);
         break;
 
-      case categories[1]:
+      case categories[1].replace(/+/g, ' '):
         sendCategoryMessage(senderID, categories[1]);
         break;
 
-      case categories[2]:
+      case categories[2].replace(/+/g, ' '):
         sendCategoryMessage(senderID, categories[2]);
         break;
 
-      case categories[3]:
+      case categories[3].replace(/ /g, ' '):
         sendCategoryMessage(senderID, categories[3]);
         break;
 
-      case categories[4]:
+      case categories[4].replace(/+/g, ' '):
         sendCategoryMessage(senderID, categories[4]);
         break;
 
@@ -391,7 +391,8 @@ function receivedMessage(event) {
 
       default:
         // keyword(senderID, messageText);
-        sendSimplifyTextMessage(senderID, messageText);
+        // sendSimplifyTextMessage(senderID, messageText);
+        sendErrorMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
@@ -476,6 +477,25 @@ function keyword(senderID, messageText) {
 }
 
 
+/**
+ * The error response if we couldn't parse through the user's text
+ */
+function sendErrorMessage(recipientId, message) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'Sorry we don\'t know what you mean by ' + message + '.\n\nTry enter a keyword for an product you would like to buy or type \'help\'',
+      metadata: "ERROR_MESSAGE_RESPONSE"
+    }
+  };
+
+  callSendAPI(messageData);
+  messageData.message.text = 'Here is a picture of a cat for inspiration :)';
+  callSendAPI(messageData);
+  callSendAPI(messageData);
+}
 
 /**
  *
@@ -540,7 +560,21 @@ function sendHelpMessage(recipientId) {
 
   callSendAPI(messageData);
   messageData.message.text = 'This is a second message';
+
+  // Create random cat photo
   callSendAPI(messageData);
+  var x = Math.random() * 300 + 100;
+  var y = Math.random() * 300 + 100;
+  messageData.message = {
+      attachment: {
+        type: "image",
+        payload: {
+          url: 'https://placekitten.com/g/' + x + '/' + y;
+        }
+      }
+    }
+  callSendAPI(messageData);
+
 }
 
 /*
