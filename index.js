@@ -616,10 +616,10 @@ function receivedMessage(event) {
     } else if (/(dining)? ?chairs?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[12], color);
       return;
-    } else if (/sofas?/gi.test(messageText) || /couchs?/i.test(messageText)) {
+    } else if (/sofas?/gi.test(messageText) || /couches?/i.test(messageText)) {
       sendCategoryMessage(senderID, categories[13], color);
       return;
-    } else if (/cat tree?/gi.test(messageText)) {
+    } else if (/cat trees?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[14], color);
       return;
     } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText) || /luck?/i.test(messageText)) {
@@ -631,6 +631,9 @@ function receivedMessage(event) {
       return;
     } else if (/ideas?/i.test(messageText) || /inspiration?/i.test(messageText)) {
       sendIdeasButtonMessage(senderID);
+      return;
+    } else if (/awesome/gi.test(messageText) || /you rock/gi.test(messageText) || /yay/gi.test(messageText) || /hurray/gi.test(messageText) || /you rock/gi.test(messageText) || /i love you/gi.test(messageText) || /yes/gi.test(messageText)) {
+      sendPositiveResponseMessage(senderID);
       return;
     } else if (/hello/i.test(messageText) || /hi/i.test(messageText) || /greetings/i.test(messageText)) {
       sendGreetingsMessage(senderID);
@@ -890,7 +893,7 @@ function buildDataFromResponse(recipientId, object) {
 
 
 function sendHelpMessage(recipientId) {
-  var messageText = 'Hello! I am here to help you find anything and everything you need for your home :D\n\nIf you\'re looking for. Just ask for something you\'re looking for!\n\nIf you need furniture just ask and I\ll help you find some! You can get specfic as well. Ask for chairs, beds, tables, etc. and I will help you :D';
+  var messageText = 'Hello! I am here to help you find anything and everything you need for your home :D\n\nJust ask for something you\'re looking for!\n\nAsk to see any products you might be looking for. You can even specify specific colors!\n\nAsk for IDEAS and I will send you some personalized Wayfair tips\n\nAsk for anything and I will try to help you :D';
 
   var messageData = {
     recipient: {
@@ -1271,6 +1274,20 @@ function sendButtonMessage(recipientId) {
       }
     }
   };  
+
+  callSendAPI(messageData);
+}
+
+function sendPositiveResponseMessage(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: 'I am to please ;)',
+      metadata: "POSITIVE_RESPONSE_MESSAGE"
+    }
+  };
 
   callSendAPI(messageData);
 }
