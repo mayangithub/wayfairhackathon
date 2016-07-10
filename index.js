@@ -64,7 +64,16 @@ var categories = [
     'sheets',
     'bedding+sets',
     'wall+mirrors',
-    'table+lamps' // <-- last item saved
+    'table+lamps',
+    'headboards',
+    'nightstands',
+    'dressers',
+    'armoires',
+    'bed+pillow',
+    'hallway+runner',
+    'computer+desks',
+    'dining+chairs',
+    'sofas'
   ];
 
 var colors = [
