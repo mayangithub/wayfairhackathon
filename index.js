@@ -955,7 +955,15 @@ function receivedPostback(event) {
   // let them know it was successful
 
   // sendTextMessage(senderID, "Postback called");
-  sendTextMessage(senderID, payload);
+  switch (payload) {
+    case 'rooms':
+      sendRoomsButtonMessage(senderID);
+      break;
+    default:
+      sendTextMessage(senderID, payload);
+      break;
+  }
+
 }
 
 /*
