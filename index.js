@@ -495,8 +495,8 @@ function sendErrorMessage(recipientId, message) {
   messageData.message.text = 'Here is a picture of a cat for inspiration :)';
   callSendAPI(messageData);
   // Create random cat photo
-  var x = Math.random() * 300 + 100;
-  var y = Math.random() * 300 + 100;
+  var x = Math.floor(Math.random() * 300 + 100);
+  var y = Math.floor(Math.random() * 300 + 100);
   var myUrl = 'placekitten.com/g/' + x.toString() + '/' + y.toString();
 
   var newPictureMessage = {
@@ -1126,7 +1126,7 @@ function callSendAPI(messageData) {
       }
     } else {
       var errorMessage = 'something went wrng';//response.error.message;
-      var errorCode = response.error.code;
+      var errorCode = 42;//response.error.code;
       console.error("Unable to send message. Error", 
         errorCode, errorMessage);
     }
