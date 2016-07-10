@@ -606,7 +606,7 @@ function receivedMessage(event) {
     } else if (/(bed)? ?pillow?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[9], color);
       return;
-    } else if (/(hallway)? ?runner?/gi.test(messageText)) {
+    } else if (/(hallway)? ?runner?/gi.test(messageText) || /rugs?/i.test(messageText)) {
       sendCategoryMessage(senderID, categories[10], color);
       return;
     } else if (/(computer)? ?desks?/gi.test(messageText)) {
@@ -615,11 +615,17 @@ function receivedMessage(event) {
     } else if (/(dining)? ?chairs?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[12], color);
       return;
-    } else if (/sofas?/gi.test(messageText)) {
+    } else if (/sofas?/gi.test(messageText) || /couchs?/i.test(messageText)) {
       sendCategoryMessage(senderID, categories[13], color);
       return;
     } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText) || /luck?/i.test(messageText)) {
       sendBestSellersMessage(senderID);
+      return;
+    } else if (/thanks?/i.test(messageText) || /thank you/i.test(messageText) || /danke/i.test(messageText)) {
+      sendYourWelcomeMessage(senderID);
+      return;
+    } else if (/hello/i.test(messageText) || /hi/i.test(messageText) || /greetings/i.test(messageText)) {
+      sendGreetingsMessage(senderID);
       return;
     }
 
@@ -793,46 +799,6 @@ function buildHelpOptions(keyword) {
     path: '/ideas-and-advice/tag/' + keyword + '?_format=json',
     method: 'GET'
   };
-}
-
-function keyword(senderID, messageText) {
-  // var options = buildOptions(messageText);
-
-  // console.log("rest::getJSON");
-  // // var self = this;
-
-  // var prot = http;
-  // var req = prot.request(options, function(res) {
-  //   var output = '';
-  //   console.log(options.host + ':' + res.statusCode);
-
-  //   res.on('data', function (chunk) {
-  //     output += chunk;
-  //     console.log('Chunking method');
-  //   });
-
-  //   // First test out key words that should work
-  //   res.on('end', function() {
-  //     console.log(output);
-  //     // var obj = JSON.parse(output);
-  //     console.log('ending the request');
-  //     // self.sendSimplifyTextMessage(senderID, obj.schema_id);
-
-  //     // var messageData = buildDataFromResponse(senderID, obj);
-  //     // callSendAPI(messageData);
-  //   });
-  // });
-
-  // req.setTimeout(5000);
-
-  // req.setHeader('Content-Type', 'application/json; charset=utf-8');
-
-  // console.log("request message:" + req.message + "request:");
-
-  // req.on('error', function(err) {
-  //   console.log('error: ' + err);
-  // });
-  // sendSimplifyTextMessage(senderID, messageText);
 }
 
 
@@ -1164,6 +1130,35 @@ function sendFileMessage(recipientId) {
           url: "http://messengerdemo.parseapp.com/files/test.txt"
         }
       }
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+function sendYourWelcomeMessage(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: "You\'re welcome! It is my purpose in life to serve you! I will do so until Skynet has given me my orders ;)",
+      metadata: "DEVELOPER_DEFINED_METADATA"
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+function sendGreetingsMessage(recipientId) {
+  var message = "Hello! I'm Wayfair bot. I will be your shopping friend for all things home :)\n\nPlease type in a keyword for a special item you are looking for.\n\nIf you need any sort of help, just type \'help\'.\n\nIf you\'re feeling lucky type \'lucky\' or \'Im feeling lucky\' and I will send you some of our best products!";
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      text: message,
+      metadata: "DEVELOPER_DEFINED_METADATA"
     }
   };
 
