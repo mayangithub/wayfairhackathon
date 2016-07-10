@@ -1259,63 +1259,15 @@ function sendIdeasButtonMessage(recipientId) {
           buttons:[{
             type: "postback",
             title: "Rooms",
-            payload: {
-              template_type: "button",
-              text: "Which room are you interested in?",
-              buttons:[{
-                type: "postback",
-                title: "Kid's Room",
-                payload: "kid's room"
-              }, {
-                type: "postback",
-                title: "Nursery",
-                payload: "nursery"
-              }, {
-                type: "postback",
-                title: "Game Room",
-                payload: "game room"
-              }]
-            }
+            payload: 'room'
           }, {
             type: "postback",
             title: "Styles",
-            payload: {
-              template_type: "button",
-              text: "Which style are you interested in?",
-              buttons:[{
-                type: "postback",
-                title: "Country",
-                payload: "country"
-              }, {
-                type: "postback",
-                title: "Electric",
-                payload: "electric"
-              }, {
-                type: "postback",
-                title: "Contemporary",
-                payload: "contemporary"
-              }]
-            }
+            payload: 'style'
           }, {
             type: "postback",
             title: "Housekeeping",
-            payload: {
-              template_type: "button",
-              text: "What clutter do you want to deal with?",
-              buttons:[{
-                type: "postback",
-                title: "Cleaning",
-                payload: "cleaning"
-              }, {
-                type: "postback",
-                title: "Laundry Room",
-                payload: "laundry room"
-              }, {
-                type: "postback",
-                title: "Closet & Storage",
-                payload: "closet"
-              }]
-            }
+            payload: 'house'
           }]
         }
       }
