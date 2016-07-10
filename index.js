@@ -17,7 +17,6 @@ const
   express = require('express'),
   https = require('https'),  
   request = require('request');
-  //keywordExtractor = require("keyword-extractor");
 
 var app = express();
 var fs = require('fs');
@@ -57,7 +56,7 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
   process.exit(1);
 }
 
-const CATEGORY_POSITION = 4;
+const CATEGORY_POSITION = 2;
 
 var categories = [
     'beds',
