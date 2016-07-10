@@ -56,8 +56,8 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
   process.exit(1);
 }
 
-const CATEGORY_POSITION = 14;
-const COLOR_OPTIONS = 2;
+const CATEGORY_POSITION = 0;
+const COLOR_OPTIONS = 0;
 
 var categories = [
     'beds',
@@ -116,7 +116,7 @@ var best_seller_api = {
         var card = {};
         card.title = productsArray[i].name;
         card.image_url = productsArray[i].image_url;
-        card.subtitle = '$' + productsArray[i].list_price;
+        card.subtitle = 'SKU: '+ productsArray[i].sku + ' Price: $' + productsArray[i].list_price;
         var buyButton = {};
         buyButton.type = 'web_url';
         buyButton.title = 'Purchase';
@@ -623,12 +623,13 @@ function receivedMessage(event) {
       sendCategoryMessage(senderID, categories[14], color);
       return;
     } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText) || /luck?/i.test(messageText)) {
+      sendTextMessage(senderID, "You're lucky! Here are our Best Sellers!");
       sendBestSellersMessage(senderID);
       return;
     } else if (/thanks?/i.test(messageText) || /thank you/i.test(messageText) || /danke/i.test(messageText)) {
       sendYourWelcomeMessage(senderID);
       return;
-    } else if (/ideas?/gi.test(messageText)) {
+    } else if (/ideas?/i.test(messageText) || /inspiration?/i.test(messageText)) {
       sendIdeasButtonMessage(senderID);
       return;
     } else if (/hello/i.test(messageText) || /hi/i.test(messageText) || /greetings/i.test(messageText)) {
