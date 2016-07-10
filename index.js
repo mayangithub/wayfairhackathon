@@ -623,13 +623,13 @@ function receivedMessage(event) {
       sendCategoryMessage(senderID, categories[14], color);
       return;
     } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText) || /luck?/i.test(messageText)) {
+      sendTextMessage(senderID, "You're lucky! Here are our Best Sellers!");
       sendBestSellersMessage(senderID);
       return;
     } else if (/thanks?/i.test(messageText) || /thank you/i.test(messageText) || /danke/i.test(messageText)) {
       sendYourWelcomeMessage(senderID);
       return;
     } else if (/idea?/i.test(messageText) || /inspiration?/i.test(messageText)) {
-      sendTextMessage(senderID, "You're lucky! Here are our Best Sellers!");
       sendIdeasButtonMessage(senderID);
       return;
     } else if (/hello/i.test(messageText) || /hi/i.test(messageText) || /greetings/i.test(messageText)) {
