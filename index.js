@@ -497,8 +497,13 @@ function sendErrorMessage(recipientId, message) {
   // Create random cat photo
   var x = Math.random() * 300 + 100;
   var y = Math.random() * 300 + 100;
-  var myUrl = 'https://placekitten.com/g/' + x.toString() + '/' + y.toString();
-  messageData.message = {
+  var myUrl = 'placekitten.com/g/' + x.toString() + '/' + y.toString();
+
+  var newPictureMessage = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
       attachment: {
         type: "image",
         payload: {
@@ -506,7 +511,9 @@ function sendErrorMessage(recipientId, message) {
         }
       }
     }
-  callSendAPI(messageData);
+  };
+  
+  callSendAPI(newPictureMessage);
 }
 
 /**
