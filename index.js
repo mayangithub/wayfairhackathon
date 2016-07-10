@@ -512,7 +512,7 @@ function sendErrorMessage(recipientId, message) {
       }
     }
   };
-  
+
   callSendAPI(newPictureMessage);
 }
 
@@ -1125,9 +1125,9 @@ function callSendAPI(messageData) {
         recipientId);
       }
     } else {
-      var errorMessage = response.error.message;
+      var errorMessage = 'something went wrng';//response.error.message;
       var errorCode = response.error.code;
-      console.error("Unable to send message. Error %d: %s", 
+      console.error("Unable to send message. Error", 
         errorCode, errorMessage);
     }
   });  
