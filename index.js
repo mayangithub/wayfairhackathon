@@ -461,7 +461,10 @@ function receivedMessage(event) {
 
     var colorMatch = /blue|green|red|orange|yellow/ig.exec(messageText);
 
-    var color = colorMatch.length > 0 ? colorMatch[0] : null;
+    var color = '';
+    if (colorMatch) {
+      color = colorMatch[0];
+    }
 
     // yellow and orange will still do red searches
     if (color && (color === 'orange' || color === 'yellow')) {
