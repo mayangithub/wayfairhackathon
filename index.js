@@ -139,6 +139,104 @@ app.get('/run_script', function(request, response) {
   response.send('completed');
 });
 
+
+
+
+
+app.get('/help_big_category_script', function(request, response) {
+
+  console.log("Start help big category script ---->");
+
+  var helper_big_category = [
+    "nursery~8",
+    'game-room~9',
+    "kids-room~12",
+    "contemporary~21",
+    "country~23",
+    "eclectic~24",
+    "glam~26",
+    "industrial~27",
+    "mid-century-modern~28",
+    "parties~47",
+    "cleaning~51",
+    "laundry-room~52",
+    "closet-storage~53",
+    "garage-workspace~55"
+  ];
+
+
+  var protocal = http;
+  var index = 13;
+  // for (var index = 0; index < helper_big_category.length;index++) {
+    var options = buildHelpOptions(helper_big_category[index]);
+
+    var req = protocal.request(options, function(res) {
+      var output = '';
+      console.log('help ' + options.path + ':' + res.statusCode);
+
+      res.on('data', function (chunk) {
+        output += chunk;
+      });
+
+      res.on('end', function() {
+        var obj = JSON.parse(output);
+
+        console.log('Building help response cards');
+        // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
+        var postsArray = obj.pages;
+        var myElements = [];
+        var length = (postsArray.length >= 10) ? 10 : postsArray.length;
+
+        for (var i = 0; i < length; i++) {
+          var card = {};
+          card.title = postsArray[i].vital_data.promotional_title;
+          card.image_url = postsArray[i].vital_data.image_source;
+          card.subtitle = postsArray[i].vital_data.description;
+
+          var readMoreButton = {};
+          readMoreButton.type = 'web_url';
+          readMoreButton.title = 'Read More';
+          readMoreButton.url = postsArray[i].url;
+          card.buttons = [readMoreButton];
+
+          myElements.push(card);
+        }
+
+        var messageData = {
+          recipient: {
+          },
+          message:{
+            attachment:{
+              type:"template",
+              payload:{
+                template_type:"generic",
+                elements: myElements
+              }
+            }
+          }
+        };
+
+        console.log('writing data for ' + helper_big_category[index]);
+        fs.writeFile(helper_big_category[index] + '.txt', JSON.stringify(messageData), function(err) {
+          if(err) {
+            return console.log(err);
+          }
+
+          console.log("The file was saved!");
+        });
+      });
+    });
+  // }
+  
+
+  req.on('error', function(err) {
+    console.log('error: ' + err);
+  });
+
+  req.end();
+  response.send('completed');
+});
+
 /*
  * Use your own validation token. Check that the token used in the Webhook 
  * setup is the same token used here.
@@ -431,6 +529,17 @@ function buildOptions(keyword) {
     host: 'www.wayfair.com',
     port: 80,
     path: '/keyword.php?keyword=' + keyword + '&command=dosearch&dept=0&_format=json',
+    method: 'GET'
+  };
+}
+
+function buildHelpOptions(keyword) {
+  // Replace spaces with + and deal with the other url encoding issues later
+  keyword = keyword.replace(/ /g, '+');
+  return {
+    host: 'www.wayfair.com',
+    port: 80,
+    path: '/ideas-and-advice/tag/' + keyword + '?_format=json',
     method: 'GET'
   };
 }
