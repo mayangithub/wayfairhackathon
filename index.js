@@ -1259,15 +1259,15 @@ function sendIdeasButtonMessage(recipientId) {
           buttons:[{
             type: "postback",
             title: "Rooms",
-            payload: "Rooms"
+            payload: 'room'
           }, {
             type: "postback",
             title: "Styles",
-            payload: "Styles"
+            payload: 'style'
           }, {
             type: "postback",
             title: "Housekeeping",
-            payload: "Housekeeping"
+            payload: 'house'
           }]
         }
       }
