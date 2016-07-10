@@ -56,15 +56,8 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
   process.exit(1);
 }
 
-var options = {
-  host: 'www.wayfair.com',
-  port: 80,
-  path: '/keyword.php?keyword=Beds&command=dosearch&dept=0&_format=json',
-  method: 'GET'
-};
-
 // Example endpoint that hits the wayfair endpoint and pulls the appropriate data it needs to build out our response
-app.get('/testing', function(request, response) {
+app.get('/run_script', function(request, response) {
 
   console.log("rest::getJSON");
 
@@ -405,12 +398,9 @@ function buildOptions(keyword) {
   // Replace spaces with + and deal with the other url encoding issues later
   keyword = keyword.replace(/ /g, '+');
   return {
-    //host: 'jsonplaceholder.typicode.com',
     host: 'www.wayfair.com',
     port: 80,
     path: '/keyword.php?keyword=' + keyword + '&command=dosearch&dept=0&_format=json',
-    //path: '/filters/Beds-l12-c46122-O122~Espresso-O127339~FREE+1%5BD%5D+or+2%5BD%5DDay+Shipping-O78269~Yes.html?_format=json',
-    //path: '/photos',
     method: 'GET'
   };
 }
