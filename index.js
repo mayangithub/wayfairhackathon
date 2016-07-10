@@ -122,8 +122,6 @@ var best_seller_api = {
         }
       };
 
-      console.log(messageData);
-
       fs.writeFile("bestSellerFile.txt", JSON.stringify(messageData), function(err) {
         if(err) {
           return console.log(err);
@@ -490,7 +488,49 @@ function sendBestSellersMessage(recipientId) {
   messageData.recipient.id = recipientId;
 
   console.log(messageData.elements);
-  callSendAPI(messageData);
+
+  var newMessageData = generateRandomBestSellers(messageData, recipientId);
+
+  console.log("new message best seller data: " + newMessageData);
+  callSendAPI(newMessageData);
+}
+
+
+function generateRandomBestSellers(messageData, recipientId){
+  var elements = messageData.message.attachment.payload.elements;
+  var productCount = elements.length;
+  var myElements = [];
+  var genNumbers = [];
+
+  for (var i = 0; i < 4; i++) {
+    var randomNo = Math.floor(Math.random() * productCount-1);
+    if(genNumbers.indexOf(randomNo) != -1){ // duplicate
+      console.log('got duplicate numbers');
+      i--;
+      continue;
+    }
+    genNumbers.push(randomNo);
+    myElements.push(elements[randomNo]);
+  }
+
+  console.log("randomly generated best seller element:" + myElements);
+
+  var newMessageData = {
+    recipient: {
+      id: recipientId
+    },
+    message:{
+      attachment:{
+        type:"template",
+        payload:{
+          template_type:"generic",
+          elements: myElements
+        }
+      }
+    }
+  };
+
+  return newMessageData;
 }
 
 /**
