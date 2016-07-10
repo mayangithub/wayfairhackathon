@@ -72,9 +72,7 @@ var best_seller_api = {
 
 // Example endpoint that hits the wayfair endpoint and pulls the best sellers product data it needs to build out our response
 app.get('/pull_best_sellers', function(request, response) {
-
   console.log("rest::getJSON");
-
   var prot = http;
   var req = prot.request(best_seller_api, function(res) {
     var output = '';
@@ -86,7 +84,6 @@ app.get('/pull_best_sellers', function(request, response) {
 
     res.on('end', function() {
       var obj = JSON.parse(output);
-
       console.log('Building response cards');
       // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
       var productsArray = obj.product_collection;
@@ -94,23 +91,18 @@ app.get('/pull_best_sellers', function(request, response) {
       var myElements = [];
 
       console.log('product count for best sellers: '+ productCount);
-
       for (var i = 0; i < productCount; i++) {
         var card = {};
         card.title = productsArray[i].name;
         card.image_url = productsArray[i].image_url;
         card.subtitle = '$' + productsArray[i].list_price;
-
         var buyButton = {};
         buyButton.type = 'web_url';
         buyButton.title = 'Purchase';
         buyButton.url = productsArray[i].product_url;
         card.buttons = [buyButton];
-
         myElements.push(card);
       }
-
-      console.log('----message: ' + messageData);
 
       var messageData = {
         recipient: {
@@ -132,17 +124,13 @@ app.get('/pull_best_sellers', function(request, response) {
         if(err) {
           return console.log(err);
         }
-
         console.log("The file was saved!");
       });
-
     });
   });
-
   req.on('error', function(err) {
     console.log('error: ' + err);
   });
-
   req.end();
   response.send('completed');
 });
