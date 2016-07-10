@@ -125,7 +125,7 @@ var best_seller_api = {
 
       console.log(messageData);
 
-      fs.writeFile("bestSeller.txt", JSON.stringify(messageData), function(err) {
+      fs.writeFile("bestSellerFile.txt", JSON.stringify(messageData), function(err) {
         if(err) {
           return console.log(err);
         }
@@ -482,7 +482,7 @@ function sendBedsMessage(recipientId) {
 }
 
 function sendBestSellersMessage(recipientId) {
-  var contents = fs.readFileSync('bestSellers.txt', 'utf8');
+  var contents = fs.readFileSync('bestSellerFile.txt', 'utf8');
 
   var messageData = JSON.parse(contents);
   messageData.recipient.id = recipientId;
