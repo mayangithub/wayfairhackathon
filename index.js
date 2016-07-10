@@ -459,6 +459,7 @@ function receivedMessage(event) {
   // Put regex right here to parse out keywords
   if (messageText) {
 
+    messageText = messageText.toLowerCase();
     var colorMatch = /blue|green|red|orange|yellow/ig.exec(messageText);
 
     var color = '';
@@ -470,12 +471,6 @@ function receivedMessage(event) {
     if (color && (color === 'orange' || color === 'yellow')) {
       color = 'red';
     }
-
-    // If we receive a text message, check to see if it matches any special
-    // keywords and send back the corresponding example. Otherwise, just echo
-    // the text we received.
-    messageText = messageText.toLowerCase();
-
 
     // TODO add color files
     // add more furniture files
