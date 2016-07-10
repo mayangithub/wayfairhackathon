@@ -497,7 +497,7 @@ function sendErrorMessage(recipientId, message) {
   // Create random cat photo
   var x = Math.random() * 300 + 100;
   var y = Math.random() * 300 + 100;
-  myUrl = 'https://placekitten.com/g/' + x.toString() + '/' + y.toString();
+  var myUrl = 'https://placekitten.com/g/' + x.toString() + '/' + y.toString();
   messageData.message = {
       attachment: {
         type: "image",
