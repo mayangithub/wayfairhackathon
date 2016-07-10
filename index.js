@@ -964,7 +964,15 @@ function receivedPostback(event) {
       sendHouseKeepingButtonMessage(senderID);
       break;
 
-    case 'kid room' || 'nursery' || 'game room' || 'contemporary' || 'country' || 'glam' || 'cleaning' || 'laundry' || 'closet':
+    case 'kid room':
+    case 'nursery':
+    case 'game room':
+    case 'contemporary':
+    case 'country':
+    case 'glam':
+    case 'cleaning':
+    case 'laundry':
+    case 'closet':
       sendIdeaPostMessage(senderID, payload);
       break;
 
