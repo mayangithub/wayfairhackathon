@@ -56,8 +56,8 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
   process.exit(1);
 }
 
-const CATEGORY_POSITION = 0;
-const COLOR_OPTIONS = 0;
+const CATEGORY_POSITION = 14;
+const COLOR_OPTIONS = 2;
 
 var categories = [
     'beds',
@@ -73,7 +73,8 @@ var categories = [
     'hallway+runner',
     'computer+desks',
     'dining+chairs',
-    'sofas'
+    'sofas',
+    'cat+tree'
   ];
 
 var colors = [
@@ -617,6 +618,9 @@ function receivedMessage(event) {
       return;
     } else if (/sofas?/gi.test(messageText) || /couchs?/i.test(messageText)) {
       sendCategoryMessage(senderID, categories[13], color);
+      return;
+    } else if (/cat?tree?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[14], color);
       return;
     } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText) || /luck?/i.test(messageText)) {
       sendBestSellersMessage(senderID);
