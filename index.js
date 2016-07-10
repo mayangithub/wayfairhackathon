@@ -363,93 +363,94 @@ function receivedMessage(event) {
   // Put regex right here to parse out keywords
   if (messageText) {
 
+    var colorMatch = /blue|green|red|orange|yellow/ig.exec(messageText);
+
+    var color = colorMatch.length > 0 ? colorMatch[0] : null;
+
+    // yellow and orange will still do red searches
+    if (color && (color === 'orange' || color === 'yellow')) {
+      color = 'red';
+    }
+
     // If we receive a text message, check to see if it matches any special
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
-    switch (messageText.toLowerCase()) {
+    messageText = messageText.toLowerCase();
+
+
+    // TODO add color methods
+    if (/bedding ?[sets?]?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[2], color);
+    } else if (/beds?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[0], color);
+    } else if (/sheets?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[1], color);
+    } else if (/(wall)? ?mirrors?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[3], color);
+    } else if (/(table)? ?lamps?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[4], color);
+    } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText)) {
+      sendBestSellersMessage(senderID, categories[4], color);
+    }
+
+    switch (messageText) {
       case 'lucky':
         sendBestSellersMessage(senderID);
-        break;
-
-      case categories[0].replace(/\+/g, ' '):
-        sendCategoryMessage(senderID, categories[0]);
-        break;
-
-      case categories[1].replace(/\+/g, ' '):
-        sendCategoryMessage(senderID, categories[1]);
-        break;
-
-      case categories[2].replace(/\+/g, ' '):
-        sendCategoryMessage(senderID, categories[2]);
-        break;
-
-      case categories[3].replace(/\+/g, ' '):
-        sendCategoryMessage(senderID, categories[3]);
-        break;
-
-      case categories[4].replace(/\+/g, ' '):
-        sendCategoryMessage(senderID, categories[4]);
         break;
 
       case 'help':
         sendHelpMessage(senderID);
         break;
 
-      case 'furniture':
-        sendFurnitureMessage(senderID);
-        break;
+      // case 'image':
+      //   sendImageMessage(senderID);
+      //   break;
 
-      case 'image':
-        sendImageMessage(senderID);
-        break;
+      // case 'gif':
+      //   sendGifMessage(senderID);
+      //   break;
 
-      case 'gif':
-        sendGifMessage(senderID);
-        break;
+      // case 'audio':
+      //   sendAudioMessage(senderID);
+      //   break;
 
-      case 'audio':
-        sendAudioMessage(senderID);
-        break;
+      // case 'video':
+      //   sendVideoMessage(senderID);
+      //   break;
 
-      case 'video':
-        sendVideoMessage(senderID);
-        break;
+      // case 'file':
+      //   sendFileMessage(senderID);
+      //   break;
 
-      case 'file':
-        sendFileMessage(senderID);
-        break;
+      // case 'button':
+      //   sendButtonMessage(senderID);
+      //   break;
 
-      case 'button':
-        sendButtonMessage(senderID);
-        break;
+      // case 'generic':
+      //   sendGenericMessage(senderID);
+      //   break;
 
-      case 'generic':
-        sendGenericMessage(senderID);
-        break;
+      // case 'receipt':
+      //   sendReceiptMessage(senderID);
+      //   break;
 
-      case 'receipt':
-        sendReceiptMessage(senderID);
-        break;
+      // case 'quick reply':
+      //   sendQuickReply(senderID);
+      //   break;
 
-      case 'quick reply':
-        sendQuickReply(senderID);
-        break;
+      // case 'read receipt':
+      //   sendReadReceipt(senderID);
+      //   break;
 
-      case 'read receipt':
-        sendReadReceipt(senderID);
-        break;
+      // case 'typing on':
+      //   sendTypingOn(senderID);
+      //   break;
 
-      case 'typing on':
-        sendTypingOn(senderID);
-        break;
-
-      case 'typing off':
-        sendTypingOff(senderID);
-        break;
+      // case 'typing off':
+      //   sendTypingOff(senderID);
+      //   break;
 
       default:
-        // keyword(senderID, messageText);
-        // sendSimplifyTextMessage(senderID, messageText);
         sendErrorMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
@@ -459,7 +460,9 @@ function receivedMessage(event) {
 
 
 
-function sendCategoryMessage(recipientId, category) {
+function sendCategoryMessage(recipientId, category, color) {
+  // name the files after the categorycolor.txt
+  category = color ? category + color : category;
   var contents = fs.readFileSync(category + '.txt', 'utf8');
   var messageData = JSON.parse(contents);
   messageData.recipient.id = recipientId;
@@ -908,20 +911,6 @@ function sendSimplifyTextMessage(recipientId, messageText) {
     },
     message: {
       text: messageText,
-      metadata: "DEVELOPER_DEFINED_METADATA"
-    }
-  };
-
-  callSendAPI(messageData);
-}
-
-function sendFurnitureMessage(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      text: "I see you want some furniture! I would suggest going to Wayfair.com :)",
       metadata: "DEVELOPER_DEFINED_METADATA"
     }
   };
