@@ -623,6 +623,7 @@ function receivedMessage(event) {
       return;
     }
 
+    console.log(messageText);
     switch (messageText) {
       case 'ideas':
         sendIdeasButtonMessage(senderID);
@@ -1259,7 +1260,7 @@ function sendIdeasButtonMessage(recipientId) {
           buttons:[{
             type: "postback",
             title: "Rooms",
-            payload: 'room'
+            payload: 'rooms'
           }, {
             type: "postback",
             title: "Styles",
@@ -1287,7 +1288,6 @@ function sendRoomsButtonMessage(recipientId) {
       id: recipientId
     },
     message: {
-      is_echo:true,
       attachment: {
         type: "template",
         payload: {
