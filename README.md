@@ -1,4 +1,4 @@
-# node-js-getting-started
+# Wayfair Hackathon Messenger Bot -- July 8-11, 2016
 
 A barebones Node.js app using [Express 4](http://expressjs.com/).
 
