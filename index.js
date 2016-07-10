@@ -481,16 +481,22 @@ function receivedMessage(event) {
     // add more furniture files
     if (/bedding ?[sets?]?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[2], color);
+      return;
     } else if (/beds?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[0], color);
+      return;
     } else if (/sheets?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[1], color);
+      return;
     } else if (/(wall)? ?mirrors?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[3], color);
+      return;
     } else if (/(table)? ?lamps?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[4], color);
+      return;
     } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText)) {
       sendBestSellersMessage(senderID, categories[4], color);
+      return;
     }
 
     switch (messageText) {
@@ -501,6 +507,9 @@ function receivedMessage(event) {
       case 'help':
         sendHelpMessage(senderID);
         break;
+
+      default:
+        sendErrorMessage(senderID, messageText);  
 
       // case 'image':
       //   sendImageMessage(senderID);
@@ -549,9 +558,6 @@ function receivedMessage(event) {
       // case 'typing off':
       //   sendTypingOff(senderID);
       //   break;
-
-      default:
-        sendErrorMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
