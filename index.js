@@ -56,8 +56,8 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN)) {
   process.exit(1);
 }
 
-const CATEGORY_POSITION = 14;
-const COLOR_OPTIONS = 2;
+const CATEGORY_POSITION = 0;
+const COLOR_OPTIONS = 0;
 
 var categories = [
     'beds',
@@ -116,7 +116,7 @@ var best_seller_api = {
         var card = {};
         card.title = productsArray[i].name;
         card.image_url = productsArray[i].image_url;
-        card.subtitle = '$' + productsArray[i].list_price;
+        card.subtitle = 'SKU: '+ productsArray[i].sku + ' Price: $' + productsArray[i].list_price;
         var buyButton = {};
         buyButton.type = 'web_url';
         buyButton.title = 'Purchase';
@@ -734,6 +734,8 @@ function sendBestSellersMessage(recipientId) {
   var newMessageData = generateRandomBestSellers(messageData, recipientId);
 
   console.log("new message best seller data: " + newMessageData);
+  var greetingText = "Good Luck! Here's our Best Sellers!";
+  sendTextMessage(senderID, greetingText);
   callSendAPI(newMessageData);
 }
 
