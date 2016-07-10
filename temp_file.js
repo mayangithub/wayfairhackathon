@@ -436,46 +436,6 @@ function buildOptions(keyword) {
   };
 }
 
-function keyword(senderID, messageText) {
-  // var options = buildOptions(messageText);
-
-  // console.log("rest::getJSON");
-  // // var self = this;
-
-  // var prot = http;
-  // var req = prot.request(options, function(res) {
-  //   var output = '';
-  //   console.log(options.host + ':' + res.statusCode);
-
-  //   res.on('data', function (chunk) {
-  //     output += chunk;
-  //     console.log('Chunking method');
-  //   });
-
-  //   // First test out key words that should work
-  //   res.on('end', function() {
-  //     console.log(output);
-  //     // var obj = JSON.parse(output);
-  //     console.log('ending the request');
-  //     // self.sendSimplifyTextMessage(senderID, obj.schema_id);
-
-  //     // var messageData = buildDataFromResponse(senderID, obj);
-  //     // callSendAPI(messageData);
-  //   });
-  // });
-
-  // req.setTimeout(5000);
-
-  // req.setHeader('Content-Type', 'application/json; charset=utf-8');
-
-  // console.log("request message:" + req.message + "request:");
-
-  // req.on('error', function(err) {
-  //   console.log('error: ' + err);
-  // });
-  // sendSimplifyTextMessage(senderID, messageText);
-}
-
 
 /**
  * The error response if we couldn't parse through the user's text

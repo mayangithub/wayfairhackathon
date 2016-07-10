@@ -628,7 +628,7 @@ function receivedMessage(event) {
     } else if (/thanks?/i.test(messageText) || /thank you/i.test(messageText) || /danke/i.test(messageText)) {
       sendYourWelcomeMessage(senderID);
       return;
-    } else if (/idea?/gi.test(messageText)) {
+    } else if (/ideas?/gi.test(messageText)) {
       sendIdeasButtonMessage(senderID);
       return;
     } else if (/hello/i.test(messageText) || /hi/i.test(messageText) || /greetings/i.test(messageText)) {
@@ -970,13 +970,18 @@ function receivedPostback(event) {
     case 'kid room':
     case 'nursery':
     case 'game room':
-    case 'contemporary':
-    case 'country':
-    case 'glam':
     case 'cleaning':
     case 'laundry':
     case 'closet':
       var messageText = "Good choice. Here's our well-chosen advice for your " + payload + ": ";
+      sendTextMessage(senderID, messageText);
+      sendIdeaPostMessage(senderID, payload);
+      break;
+
+    case 'contemporary':
+    case 'country':
+    case 'glam':
+      var messageText = "Good choice. Here's our well-chosen advice for your " + payload + " style: ";
       sendTextMessage(senderID, messageText);
       sendIdeaPostMessage(senderID, payload);
       break;
