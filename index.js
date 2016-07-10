@@ -555,7 +555,21 @@ function receivedMessage(event) {
     console.log("Quick reply for message %s with payload %s",
       messageId, quickReplyPayload);
 
-    sendTextMessage(senderID, "Quick reply tapped");
+    switch (quickReply.payload) {
+      case 'lucky':
+        sendTextMessage(senderID, "You're lucky! Here are our Best Sellers!");
+        sendBestSellersMessage(senderID);
+        break;
+
+      case 'ideas':
+        sendIdeasButtonMessage(senderID);
+        break;
+
+      default:
+        break;
+    }
+
+    //sendTextMessage(senderID, "Quick reply tapped");
     return;
   }
 
@@ -960,15 +974,6 @@ function receivedPostback(event) {
 
   // sendTextMessage(senderID, "Postback called");
   switch (payload) {
-    case 'lucky':
-      sendTextMessage(senderID, "You're lucky! Here are our Best Sellers!");
-      sendBestSellersMessage(senderID);
-      break;
-
-    case 'ideas':
-      sendIdeasButtonMessage(senderID);
-      break;
-
     case 'rooms':
       sendRoomsButtonMessage(senderID);
       break;
@@ -1651,7 +1656,7 @@ function sendWelcomeQuickReply(recipientId) {
     },
     message: {
       text: "Hello! I'm Wayfair bot. I will be your shopping friend for all things home :)\n\nPlease type in a keyword for a special item you are looking for.\n\nIf you need any sort of help, just type \'help\'.\n\nIf you\'re feeling lucky type \'lucky\' or \'Im feeling lucky\' and I will send you some of our best products!",
-      // metadata: "DEVELOPER_DEFINED_METADATA",
+      metadata: "DEVELOPER_DEFINED_METADATA",
       quick_replies: [
         {
           content_type:"text",
