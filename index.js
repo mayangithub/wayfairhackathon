@@ -606,7 +606,7 @@ function receivedMessage(event) {
     } else if (/(bed)? ?pillow?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[9], color);
       return;
-    } else if (/(hallway)? ?runner?/gi.test(messageText)) {
+    } else if (/(hallway)? ?runner?/gi.test(messageText) || /rugs?/i.test(messageText)) {
       sendCategoryMessage(senderID, categories[10], color);
       return;
     } else if (/(computer)? ?desks?/gi.test(messageText)) {
@@ -615,7 +615,7 @@ function receivedMessage(event) {
     } else if (/(dining)? ?chairs?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[12], color);
       return;
-    } else if (/sofas?/gi.test(messageText)) {
+    } else if (/sofas?/gi.test(messageText) || /couchs?/i.test(messageText)) {
       sendCategoryMessage(senderID, categories[13], color);
       return;
     } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText) || /luck?/i.test(messageText)) {
