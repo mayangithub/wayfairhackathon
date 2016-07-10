@@ -605,6 +605,10 @@ function receivedMessage(event) {
         sendIdeasButtonMessage(senderID);
         break;
 
+      case 'Rooms':
+        sendRoomsButtonMessage(senderID);
+        break;
+
       case 'help':
         sendHelpMessage(senderID);
         break;
@@ -1241,6 +1245,42 @@ function sendIdeasButtonMessage(recipientId) {
             type: "postback",
             title: "Housekeeping",
             payload: "Housekeeping"
+          }]
+        }
+      }
+    }
+  };
+
+  callSendAPI(messageData);
+}
+
+/*
+ * Send a idea buttons message using the Send API.
+ *
+ */
+function sendRoomsButtonMessage(recipientId) {
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "button",
+          text: "Which room are you interested in?",
+          buttons:[{
+            type: "postback",
+            title: "Kid's Room",
+            payload: "Kid's Room"
+          }, {
+            type: "postback",
+            title: "Nursery",
+            payload: "Nursery"
+          }, {
+            type: "postback",
+            title: "Game Room",
+            payload: "Game Room"
           }]
         }
       }
