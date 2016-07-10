@@ -63,6 +63,90 @@ var options = {
   method: 'GET'
 };
 
+var best_seller_api = {
+  host: 'www.wayfair.com',
+  port: 80,
+  path: '/v/best_sellers/display_best_sellers?_format=json&product_count=100&_format=json',
+  method: 'GET'
+};
+
+// Example endpoint that hits the wayfair endpoint and pulls the best sellers product data it needs to build out our response
+app.get('/pull_best_sellers', function(request, response) {
+
+  console.log("rest::getJSON");
+
+  var prot = http;
+  var req = prot.request(best_seller_api, function(res) {
+    var output = '';
+    console.log(best_seller_api.host + ':' + res.statusCode);
+
+    res.on('data', function (chunk) {
+      output += chunk;
+    });
+
+    res.on('end', function() {
+      var obj = JSON.parse(output);
+
+      console.log('Building response cards');
+      // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
+      var productsArray = obj.product_collection;
+      var productCount = obj.product_count;
+      var myElements = [];
+
+      console.log('product count for best sellers: '+ productCount);
+
+      for (var i = 0; i < productCount; i++) {
+        var card = {};
+        card.title = productsArray[i].name;
+        card.image_url = productsArray[i].image_url;
+        card.subtitle = '$' + productsArray[i].list_price;
+
+        var buyButton = {};
+        buyButton.type = 'web_url';
+        buyButton.title = 'Purchase';
+        buyButton.url = productsArray[i].product_url;
+        card.buttons = [buyButton];
+
+        myElements.push(card);
+      }
+
+      console.log('----message: ' + messageData);
+
+      var messageData = {
+        recipient: {
+        },
+        message:{
+          attachment:{
+            type:"template",
+            payload:{
+              template_type:"generic",
+              elements: myElements
+            }
+          }
+        }
+      };
+
+      console.log(messageData);
+
+      fs.writeFile("bestSeller.txt", JSON.stringify(messageData), function(err) {
+        if(err) {
+          return console.log(err);
+        }
+
+        console.log("The file was saved!");
+      });
+
+    });
+  });
+
+  req.on('error', function(err) {
+    console.log('error: ' + err);
+  });
+
+  req.end();
+  response.send('completed');
+});
+
 // Example endpoint that hits the wayfair endpoint and pulls the appropriate data it needs to build out our response
 app.get('/testing', function(request, response) {
 
@@ -79,12 +163,6 @@ app.get('/testing', function(request, response) {
 
     res.on('end', function() {
       var obj = JSON.parse(output);
-
-
-
-
-
-
 
       console.log('Building response cards');
       // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
@@ -319,6 +397,10 @@ function receivedMessage(event) {
     // keywords and send back the corresponding example. Otherwise, just echo
     // the text we received.
     switch (messageText) {
+      case 'lucky':
+        sendBestSellersMessage(senderID);
+        break;
+
       case 'beds':
         sendBedsMessage(senderID);
         break;
@@ -390,6 +472,16 @@ function receivedMessage(event) {
 
 function sendBedsMessage(recipientId) {
   var contents = fs.readFileSync('testFile.txt', 'utf8');
+
+  var messageData = JSON.parse(contents);
+  messageData.recipient.id = recipientId;
+
+  console.log(messageData.elements);
+  callSendAPI(messageData);
+}
+
+function sendBestSellersMessage(recipientId) {
+  var contents = fs.readFileSync('bestSellers.txt', 'utf8');
 
   var messageData = JSON.parse(contents);
   messageData.recipient.id = recipientId;
