@@ -964,6 +964,10 @@ function receivedPostback(event) {
       sendHouseKeepingButtonMessage(senderID);
       break;
 
+    case 'kid room' || 'nursery' || 'game room' || 'contemporary' || 'country' || 'glam' || 'cleaning' || 'laundry' || 'closet':
+      sendIdeaPostMessage(senderID, payload);
+      break;
+
     default:
       sendTextMessage(senderID, payload);
       break;
@@ -1306,7 +1310,7 @@ function sendRoomsButtonMessage(recipientId) {
           buttons:[{
             type: "postback",
             title: "Kid's Room",
-            payload: "kid's room"
+            payload: "kid room"
           }, {
             type: "postback",
             title: "Nursery",
@@ -1393,6 +1397,47 @@ function sendHouseKeepingButtonMessage(recipientId) {
     }
   };
 
+  callSendAPI(messageData);
+}
+
+function sendIdeaPostMessage(recipientId, ideaCategory) {
+  var contents = "";
+  switch (ideaCategory) {
+    case 'kid room':
+      contents = fs.readFileSync('kids-room.txt', 'utf8');
+      break;
+    case 'nursery':
+      contents = fs.readFileSync('nursery.txt', 'utf8');
+      break;
+    case 'game room':
+      contents = fs.readFileSync('game-room.txt', 'utf8');
+      break;
+    case 'contemporary':
+      contents = fs.readFileSync('contemporary.txt', 'utf8');
+      break;
+    case 'country':
+      contents = fs.readFileSync('country.txt', 'utf8');
+      break;
+    case 'glam':
+      contents = fs.readFileSync('glam.txt', 'utf8');
+      break;
+    case 'cleaning':
+      contents = fs.readFileSync('cleaning.txt', 'utf8');
+      break;
+    case 'laundry':
+      contents = fs.readFileSync('laundry-room.txt', 'utf8');
+      break;
+    case 'closet':
+      contents = fs.readFileSync('closet-storage.txt', 'utf8');
+      break;
+    default:
+      break;
+  }
+
+  var messageData = JSON.parse(contents);
+  messageData.recipient.id = recipientId;
+
+  console.log(messageData.elements);
   callSendAPI(messageData);
 }
 
