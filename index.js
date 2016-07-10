@@ -486,22 +486,31 @@ function sendBestSellersMessage(recipientId) {
 
   console.log(messageData.elements);
 
-  var newMessageData = generateRandomBestSeller(messageData, recipientId);
+  var newMessageData = generateRandomBestSellers(messageData, recipientId);
 
   console.log("new message best seller data: " + newMessageData);
   callSendAPI(newMessageData);
 }
 
 
-function generateRandomBestSeller(messageData, recipientId){
+function generateRandomBestSellers(messageData, recipientId){
   var elements = messageData.message.attachment.payload.elements;
   var productCount = elements.length;
-  var randomNo = Math.floor(Math.random() * productCount-1);
-
   var myElements = [];
-  myElements.push(elements[randomNo]);
+  var genNumbers = [];
 
-  console.log("randomly generated best seller element:" + elements[randomNo]);
+  for (var i = 0; i < 4; i++) {
+    var randomNo = Math.floor(Math.random() * productCount-1);
+    if(genNumbers.indexOf(randomNo) != -1){ // duplicate
+      console.log('got duplicate numbers');
+      i--;
+      continue;
+    }
+    genNumbers.push(randomNo);
+    myElements.push(elements[randomNo]);
+  }
+
+  console.log("randomly generated best seller element:" + myElements);
 
   var newMessageData = {
     recipient: {
