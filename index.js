@@ -498,6 +498,7 @@ function sendErrorMessage(recipientId, message) {
   var x = Math.floor(Math.random() * 300 + 100);
   var y = Math.floor(Math.random() * 300 + 100);
   var myUrl = 'placekitten.com/g/' + x.toString() + '/' + y.toString();
+  myUrl = 'http://placekitten.com/g/300/300';
 
   var newPictureMessage = {
     recipient: {
