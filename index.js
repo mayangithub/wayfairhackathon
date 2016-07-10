@@ -1207,7 +1207,7 @@ function sendYourWelcomeMessage(recipientId) {
 }
 
 function sendGreetingsMessage(recipientId) {
-  var message = "Hello! I'm Wayfair bot. I will be your shopping friend for all things home :)\n\nPlease type in a keyword for a special item you are looking for.\n\nIf you need any sort of help, just type \'help\'.\n\nIf you\'re feeling lucky type \'lucky\' or \'Im feeling lucky\' and I will send you some of our best products!";
+  var message = "Hello! I'm Wayfair bot. I will be your shopping friend for a zillion things home :)\n\nPlease type in a keyword for a special item you are looking for.\n\nIf you need any sort of help, just type \'help\'.\n\nIf you\'re feeling lucky type \'lucky\' or \'Im feeling lucky\' and I will send you some of our best products!";
   var messageData = {
     recipient: {
       id: recipientId
@@ -1655,12 +1655,12 @@ function sendWelcomeQuickReply(recipientId) {
       id: recipientId
     },
     message: {
-      text: "Hello! I'm Wayfair bot. I will be your shopping friend for all things home :)\n\nPlease type in a keyword for a special item you are looking for.\n\nIf you need any sort of help, just type \'help\'.\n\nIf you\'re feeling lucky type \'lucky\' or \'Im feeling lucky\' and I will send you some of our best products!",
+      text: "Hello! I'm Wayfair bot. I will be your shopping friend for a zillion things home :)\n\nPlease type in a keyword for a special item you are looking for.\n\nIf you need any sort of help, just type \'help\'.\n\nIf you\'re feeling lucky type \'lucky\' or \'Im feeling lucky\' and I will send you some of our best products!",
       metadata: "DEVELOPER_DEFINED_METADATA",
       quick_replies: [
         {
           content_type:"text",
-          title:"I feel Wayfair.",
+          title:"I feel Lucky.",
           payload:"lucky"
         },
         {
