@@ -565,11 +565,12 @@ function sendHelpMessage(recipientId) {
   callSendAPI(messageData);
   var x = Math.random() * 300 + 100;
   var y = Math.random() * 300 + 100;
+  myUrl = 
   messageData.message = {
       attachment: {
         type: "image",
         payload: {
-          url: 'https://placekitten.com/g/' + x + '/' + y;
+          url: 'https://placekitten.com/g/' + x + '/' + y
         }
       }
     }
