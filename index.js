@@ -591,16 +591,42 @@ function receivedMessage(event) {
     } else if (/(table)? ?lamps?/gi.test(messageText)) {
       sendCategoryMessage(senderID, categories[4], color);
       return;
+    } else if (/headboards?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[5], color);
+      return;
+    } else if (/nightstands?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[6], color);
+      return;
+    } else if (/dressers?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[7], color);
+      return;
+    } else if (/armoires?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[8], color);
+      return;
+    } else if (/(bed)? ?pillow?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[9], color);
+      return;
+    } else if (/(hallway)? ?runner?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[10], color);
+      return;
+    } else if (/(computer)? ?desks?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[11], color);
+      return;
+    } else if (/(dining)? ?chairs?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[12], color);
+      return;
+    } else if (/sofas?/gi.test(messageText)) {
+      sendCategoryMessage(senderID, categories[13], color);
+      return;
     } else if (/furnitures?/i.test(messageText) || /rand(om)?/i.test(messageText)) {
       sendBestSellersMessage(senderID, categories[4], color);
+      return;
+    } else if (/luck?/i.test(messageText) || /rand(om)?/i.test(messageText)) {
+      sendBestSellersMessage(senderID);
       return;
     }
 
     switch (messageText) {
-      case 'lucky':
-        sendBestSellersMessage(senderID);
-        break;
-
       case 'ideas':
         sendIdeasButtonMessage(senderID);
         break;
