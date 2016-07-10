@@ -486,13 +486,11 @@ function sendErrorMessage(recipientId, message) {
       id: recipientId
     },
     message: {
-      text: 'Sorry we don\'t know what you mean by ' + message + '.\n\nTry enter a keyword for an product you would like to buy or type \'help\'',
+      text: 'Sorry we don\'t know what you mean by ' + message + '.\n\nTry enter a keyword for an product you would like to buy or type \'help\'\n\nHere is a picture of a cat for inspiration :)',
       metadata: "ERROR_MESSAGE_RESPONSE"
     }
   };
 
-  callSendAPI(messageData);
-  messageData.message.text = 'Here is a picture of a cat for inspiration :)';
   callSendAPI(messageData);
   // Create random cat photo
   var x = Math.floor(Math.random() * 300 + 100);
