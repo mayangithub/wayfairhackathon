@@ -494,6 +494,18 @@ function sendErrorMessage(recipientId, message) {
   callSendAPI(messageData);
   messageData.message.text = 'Here is a picture of a cat for inspiration :)';
   callSendAPI(messageData);
+  // Create random cat photo
+  var x = Math.random() * 300 + 100;
+  var y = Math.random() * 300 + 100;
+  myUrl = 'https://placekitten.com/g/' + x.toString() + '/' + y.toString();
+  messageData.message = {
+      attachment: {
+        type: "image",
+        payload: {
+          url: myUrl
+        }
+      }
+    }
   callSendAPI(messageData);
 }
 
@@ -558,22 +570,6 @@ function sendHelpMessage(recipientId) {
     }
   };
 
-  callSendAPI(messageData);
-  messageData.message.text = 'This is a second message';
-
-  // Create random cat photo
-  callSendAPI(messageData);
-  var x = Math.random() * 300 + 100;
-  var y = Math.random() * 300 + 100;
-  myUrl = 'https://placekitten.com/g/' + x.toString() + '/' + y.toString();
-  messageData.message = {
-      attachment: {
-        type: "image",
-        payload: {
-          url: myUrl
-        }
-      }
-    }
   callSendAPI(messageData);
 
 }
