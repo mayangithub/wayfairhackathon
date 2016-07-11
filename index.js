@@ -643,7 +643,7 @@ function receivedMessage(event) {
       sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[12], color);
       return;
-    } else if (/sofas?/gi.test(messageText) || /couches?/i.test(messageText)) {
+    } else if (/sofas?/gi.test(messageText) || /couches?/i.test(messageText) || /couch/gi.test(messageText)) {
       sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[13], color);
       return;
