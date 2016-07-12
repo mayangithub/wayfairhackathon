@@ -1,10 +1,10 @@
 # Wayfair Hackathon Messenger Bot -- July 8-11, 2016
 
-A barebones Node.js app using [Express 4](http://expressjs.com/).
-
-This application supports the [Getting Started with Node on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs) article - check it out.
+A barebones Messenger Node.js app using [Express 4](http://expressjs.com/).
 
 ## Running Locally
+
+There are local script that can be run locally right now for the hackathon project but in order to hook into a Messenger bot this must be a public endpoint.
 
 Make sure you have [Node.js](http://nodejs.org/) and the [Heroku Toolbelt](https://toolbelt.heroku.com/) installed.
 
