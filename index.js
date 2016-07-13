@@ -565,7 +565,6 @@ function receivedMessage(event) {
         break;
     }
 
-    //sendTextMessage(senderID, "Quick reply tapped");
     return;
   }
 
