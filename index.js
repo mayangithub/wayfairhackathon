@@ -135,7 +135,7 @@ var best_seller_api = {
         }
       };
 
-      fs.writeFile("bestSellerFile.txt", JSON.stringify(messageData), function(err) {
+      fs.writeFile("data/bestSellerFile.txt", JSON.stringify(messageData), function(err) {
         if(err) {
           return console.log(err);
         }
@@ -204,7 +204,7 @@ app.get('/run_script', function(request, response) {
       };
 
       console.log('writing data for ' + categories[CATEGORY_POSITION]);
-      fs.writeFile(categories[CATEGORY_POSITION] + '.txt', JSON.stringify(messageData), function(err) {
+      fs.writeFile('data/' + categories[CATEGORY_POSITION] + '.txt', JSON.stringify(messageData), function(err) {
         if(err) {
           return console.log(err);
         }
@@ -297,7 +297,7 @@ app.get('/help_big_category_script', function(request, response) {
         }
       };
         console.log('writing data for ' + categories[CATEGORY_POSITION] + colors[COLOR_OPTIONS]);
-      fs.writeFile(categories[CATEGORY_POSITION] + colors[COLOR_OPTIONS] + '.txt', JSON.stringify(messageData), function(err) {
+      fs.writeFile('data/' + categories[CATEGORY_POSITION] + colors[COLOR_OPTIONS] + '.txt', JSON.stringify(messageData), function(err) {
         if(err) {
           return console.log(err);
         }
@@ -370,7 +370,7 @@ app.get('/run_color_script', function(request, response) {
       };
 
       console.log('writing data for ' + categories[CATEGORY_POSITION] + colors[COLOR_OPTIONS]);
-      fs.writeFile(categories[CATEGORY_POSITION] + colors[COLOR_OPTIONS] + '.txt', JSON.stringify(messageData), function(err) {
+      fs.writeFile('data/' + categories[CATEGORY_POSITION] + colors[COLOR_OPTIONS] + '.txt', JSON.stringify(messageData), function(err) {
         if(err) {
           return console.log(err);
         }
@@ -678,7 +678,7 @@ function receivedMessage(event) {
 
 function sendCategoryMessage(recipientId, category, color) {
   category = color ? category + color : category;
-  var contents = fs.readFileSync(category + '.txt', 'utf8');
+  var contents = fs.readFileSync('data/' + category + '.txt', 'utf8');
   var messageData = JSON.parse(contents);
   messageData.recipient.id = recipientId;
 
@@ -687,7 +687,7 @@ function sendCategoryMessage(recipientId, category, color) {
 }
 
 function sendBestSellersMessage(recipientId) {
-  var contents = fs.readFileSync('bestSellerFile.txt', 'utf8');
+  var contents = fs.readFileSync('data/bestSellerFile.txt', 'utf8');
 
   var messageData = JSON.parse(contents);
   messageData.recipient.id = recipientId;
@@ -1338,31 +1338,31 @@ function sendIdeaPostMessage(recipientId, ideaCategory) {
   var contents = "";
   switch (ideaCategory) {
     case 'kid room':
-      contents = fs.readFileSync('kids-room.txt', 'utf8');
+      contents = fs.readFileSync('data/kids-room.txt', 'utf8');
       break;
     case 'nursery':
-      contents = fs.readFileSync('nursery.txt', 'utf8');
+      contents = fs.readFileSync('data/nursery.txt', 'utf8');
       break;
     case 'game room':
-      contents = fs.readFileSync('game-room.txt', 'utf8');
+      contents = fs.readFileSync('data/game-room.txt', 'utf8');
       break;
     case 'contemporary':
-      contents = fs.readFileSync('contemporary.txt', 'utf8');
+      contents = fs.readFileSync('data/contemporary.txt', 'utf8');
       break;
     case 'country':
-      contents = fs.readFileSync('country.txt', 'utf8');
+      contents = fs.readFileSync('data/country.txt', 'utf8');
       break;
     case 'glam':
-      contents = fs.readFileSync('glam.txt', 'utf8');
+      contents = fs.readFileSync('data/glam.txt', 'utf8');
       break;
     case 'cleaning':
-      contents = fs.readFileSync('cleaning.txt', 'utf8');
+      contents = fs.readFileSync('data/cleaning.txt', 'utf8');
       break;
     case 'laundry':
-      contents = fs.readFileSync('laundry-room.txt', 'utf8');
+      contents = fs.readFileSync('data/laundry-room.txt', 'utf8');
       break;
     case 'closet':
-      contents = fs.readFileSync('closet-storage.txt', 'utf8');
+      contents = fs.readFileSync('data/closet-storage.txt', 'utf8');
       break;
     default:
       break;
