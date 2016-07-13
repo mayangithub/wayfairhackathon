@@ -392,6 +392,21 @@ app.get('/run_color_script', function(request, response) {
   response.send('completed');
 });
 
+/**
+ * test the hang up error
+ */
+app.get('/yy_test', function(request, response) {
+
+  var newTestOptions = {
+    host: 'www.wayfair.com',
+    port: 80,
+    path: '/v/best_sellers/display_best_sellers?_format=json&product_count=100&_format=json',
+    method: 'GET'
+  };
+
+
+});
+
 /*
  * Use your own validation token. Check that the token used in the Webhook 
  * setup is the same token used here.
@@ -675,63 +690,60 @@ function receivedMessage(event) {
       case 'help':
         sendHelpMessage(senderID);
         break;
-
+      case 'testreq':
+        sendTestReq(senderID);
+        break;
       default:
         sendErrorMessage(senderID, messageText);  
 
-      // case 'image':
-      //   sendImageMessage(senderID);
-      //   break;
 
-      // case 'gif':
-      //   sendGifMessage(senderID);
-      //   break;
 
-      // case 'audio':
-      //   sendAudioMessage(senderID);
-      //   break;
-
-      // case 'video':
-      //   sendVideoMessage(senderID);
-      //   break;
-
-      // case 'file':
-      //   sendFileMessage(senderID);
-      //   break;
-
-      // case 'button':
-      //   sendButtonMessage(senderID);
-      //   break;
-
-      // case 'generic':
-      //   sendGenericMessage(senderID);
-      //   break;
-
-      // case 'receipt':
-      //   sendReceiptMessage(senderID);
-      //   break;
-
-      // case 'quick reply':
-      //   sendQuickReply(senderID);
-      //   break;
-
-      // case 'read receipt':
-      //   sendReadReceipt(senderID);
-      //   break;
-
-      // case 'typing on':
-      //   sendTypingOn(senderID);
-      //   break;
-
-      // case 'typing off':
-      //   sendTypingOff(senderID);
-      //   break;
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
   }
 }
 
+function sendTestReq(reciptientId) {
+  console.log("Start script ---->");
+
+  var prot = http;
+  var options = buildOptions(categories[CATEGORY_POSITION]);
+
+  var req = prot.request(options, function(res) {
+    var output = '';
+    console.log(options.host + ':' + res.statusCode);
+
+    res.on('data', function (chunk) {
+      output += chunk;
+    });
+
+    res.on('end', function() {
+      var obj = JSON.parse(output);
+
+      console.log('Building response cards');
+
+      var messageData = {
+        recipient: {
+          id: recipientId
+        },
+        message: {
+          text: obj.schema_id,
+          metadata: "DEVELOPER_DEFINED_METADATA"
+        }
+    };
+
+      console.log('returning data ' + categories[CATEGORY_POSITION]);
+      callSendAPI(messageData);
+    });
+  });
+
+  req.on('error', function(err) {
+    console.log('error: ' + err);
+  });
+
+  req.end();
+}
 
 
 function sendCategoryMessage(recipientId, category, color) {
