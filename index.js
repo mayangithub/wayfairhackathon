@@ -25,14 +25,11 @@ var http = require("http");
 app.set('port', process.env.PORT || 5000);
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 app.use(express.static('public'));
-
-
 /*
  * Be sure to setup your config values before running this code. You can 
  * set them using environment variables or modifying the config file in /config.
  *
  */
-
 // App Secret can be retrieved from the App Dashboard
 const APP_SECRET = (process.env.MESSENGER_APP_SECRET) ? 
   process.env.MESSENGER_APP_SECRET :
@@ -42,7 +39,6 @@ const APP_SECRET = (process.env.MESSENGER_APP_SECRET) ?
 const VALIDATION_TOKEN = (process.env.MESSENGER_VALIDATION_TOKEN) ?
   (process.env.MESSENGER_VALIDATION_TOKEN) :
   config.get('validationToken');
-
 // Generate a page access token for your page from the App Dashboard
 const PAGE_ACCESS_TOKEN = (process.env.MESSENGER_PAGE_ACCESS_TOKEN) ?
   (process.env.MESSENGER_PAGE_ACCESS_TOKEN) :
@@ -392,21 +388,6 @@ app.get('/run_color_script', function(request, response) {
   response.send('completed');
 });
 
-/**
- * test the hang up error
- */
-app.get('/yy_test', function(request, response) {
-
-  var newTestOptions = {
-    host: 'www.wayfair.com',
-    port: 80,
-    path: '/v/best_sellers/display_best_sellers?_format=json&product_count=100&_format=json',
-    method: 'GET'
-  };
-
-
-});
-
 /*
  * Use your own validation token. Check that the token used in the Webhook 
  * setup is the same token used here.
@@ -492,7 +473,7 @@ function verifyRequestSignature(req, res, buf) {
                         .digest('hex');
 
     if (signatureHash != expectedHash) {
-      //throw new Error("Couldn't validate the request signature." + signatureHash);
+      throw new Error("Couldn't validate the request signature." + signatureHash);
     }
   }
 }
@@ -604,8 +585,6 @@ function receivedMessage(event) {
       color = 'red';
     }
 
-    // TODO add color files
-    // add more furniture files
     if (/bedding ?[sets?]?/gi.test(messageText)) {
       sendTextMessage(senderID, "Here are our top choices by category");
       sendCategoryMessage(senderID, categories[2], color);
@@ -680,7 +659,6 @@ function receivedMessage(event) {
       sendPositiveResponseMessage(senderID);
       return;
     } else if (/hello/i.test(messageText) || /hi/i.test(messageText) || /greetings/i.test(messageText)) {
-      // sendGreetingsMessage(senderID);
       sendWelcomeQuickReply(senderID);
       return;
     }
@@ -690,78 +668,18 @@ function receivedMessage(event) {
       case 'help':
         sendHelpMessage(senderID);
         break;
-      case 'testreq':
-        sendTestReq(senderID);
-        break;
       default:
-        sendErrorMessage(senderID, messageText);  
-
-
-
+        sendErrorMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
     sendTextMessage(senderID, "Message with attachment received");
   }
 }
 
-function sendTestReq(reciptientId) {
-  console.log("Start script ---->");
-
-  var prot = http;
-  var options = buildOptions(categories[CATEGORY_POSITION]);
-
-  var req = prot.request(options, function(res) {
-    var output = '';
-    console.log(options.host + ':' + res.statusCode);
-
-    res.on('data', function (chunk) {
-      output += chunk;
-    });
-
-    res.on('end', function() {
-      var obj = JSON.parse(output);
-
-      console.log('Building response cards');
-
-      var messageData = {
-        recipient: {
-          id: recipientId
-        },
-        message: {
-          text: obj.schema_id,
-          metadata: "DEVELOPER_DEFINED_METADATA"
-        }
-    };
-
-      console.log('returning data ' + categories[CATEGORY_POSITION]);
-      callSendAPI(messageData);
-    });
-  });
-
-  req.on('error', function(err) {
-    console.log('error: ' + err);
-  });
-
-  req.end();
-}
-
 
 function sendCategoryMessage(recipientId, category, color) {
-  // name the files after the categorycolor.txt
   category = color ? category + color : category;
   var contents = fs.readFileSync(category + '.txt', 'utf8');
-  var messageData = JSON.parse(contents);
-  messageData.recipient.id = recipientId;
-
-  console.log(messageData.elements);
-  callSendAPI(messageData);
-}
-
-
-
-function sendBedsMessage(recipientId) {
-  var contents = fs.readFileSync('testFile.txt', 'utf8');
-
   var messageData = JSON.parse(contents);
   messageData.recipient.id = recipientId;
 
@@ -846,7 +764,6 @@ function buildHelpOptions(keyword) {
   };
 }
 
-
 /**
  * The error response if we couldn't parse through the user's text
  */
@@ -885,52 +802,6 @@ function sendErrorMessage(recipientId, message) {
 
   callSendAPI(newPictureMessage);
 }
-
-/**
- *
- *
- */
-function buildDataFromResponse(recipientId, object) {
-  console.log('Building response cards');
-  // We won't always get this object. Sometimes we will get a subcategory option. We can deal with this an random responses later
-  var productsArray = obj.product_collection;
-  var myElements = [];
-
-  for (var i = 0; i < 4; i++) {
-    var card = {};
-    card.title = productsArray[i].name;
-    card.image_url = productsArray[i].image_url;
-    card.subtitle = '$' + productsArray[i].list_price;
-
-    var buyButton = {};
-    buyButton.type = 'web_url';
-    buyButton.title = 'Purchase';
-    buyButton.url = productsArray[i].product_url;
-    card.button = buyButton;
-
-    myElements.push(card);
-  }
-
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message:{
-        attachment:{
-          type:"template",
-          payload:{
-            template_type:"generic",
-            elements: myElements
-          }
-        }
-      }
-  };
-
-  return messageData;
-}
-
-
-
 
 
 
@@ -1056,7 +927,6 @@ function receivedMessageRead(event) {
 
   console.log("Received message read event for watermark %d and sequence " +
     "number %d", watermark, sequenceNumber);
-  // sendTextMessage(senderID, "I saw that.");
 }
 
 /*
@@ -1233,6 +1103,11 @@ function sendYourWelcomeMessage(recipientId) {
   callSendAPI(messageData);
 }
 
+/**
+ * Not currently used this would be used in the case of a new user
+ * todo: create this after testing can be determined
+ * @param recipientId
+ */
 function sendGreetingsMessage(recipientId) {
   var message = "Hello! I'm Wayfair bot. I will be your shopping friend for a zillion things home :)\n\nPlease type in a keyword for a special item you are looking for.\n\nIf you need any sort of help, just type \'help\'.\n\nIf you\'re feeling lucky type \'lucky\' or \'Im feeling lucky\' and I will send you some of our best products!";
   var messageData = {
@@ -1253,24 +1128,6 @@ function sendGreetingsMessage(recipientId) {
  *
  */
 function sendTextMessage(recipientId, messageText) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      text: messageText,
-      metadata: "DEVELOPER_DEFINED_METADATA"
-    }
-  };
-
-  callSendAPI(messageData);
-}
-
-/**
- * Extract keywords from text send from user, using the Send API
- */
-function sendSimplifyTextMessage(recipientId, messageText) {
-
   var messageData = {
     recipient: {
       id: recipientId
@@ -1778,7 +1635,8 @@ function callSendAPI(messageData) {
         recipientId);
       }
     } else {
-      var errorMessage = 'something went wrng';//response.error.message;
+      // Removed original since these are not populated correctly
+      var errorMessage = 'something went wrong';//response.error.message;
       var errorCode = 42;//response.error.code;
       console.error("Unable to send message. Error",
         errorCode, errorMessage);
@@ -1797,7 +1655,5 @@ app.get('/', function(req, res) {
 
 
 app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
-});
-
-
+  console.log('~Node app is running on port ', app.get('port'));
+}); // initialize
